@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.monitor)
     implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
 
     // Otros servicios de Firebase que puedas necesitar
     // Ejemplo de Firebase Cloud Messaging:

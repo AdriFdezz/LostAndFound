@@ -1,9 +1,9 @@
 package com.adrifdezz.lostandfound.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.google.firebase.auth.FirebaseUser
 
@@ -14,6 +14,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
+
+    val isLoginSuccess = MutableLiveData(false)
 
     fun register(email: String, password: String) {
         authRepository.register(email, password) { user, error ->
@@ -29,6 +31,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         authRepository.login(email, password) { user, error ->
             if (user != null) {
                 _user.postValue(user)
+                isLoginSuccess.postValue(true) // Marcamos como éxito solo para login
             } else {
                 _error.postValue(error)
             }
