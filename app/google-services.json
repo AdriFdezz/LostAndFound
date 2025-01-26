@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1033429646134",
+    "project_id": "lost-and-found-79f0f",
+    "storage_bucket": "lost-and-found-79f0f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033429646134:android:f6b5f38af28213fe821197",
+        "android_client_info": {
+          "package_name": "com.adrifdezz.lostandfound"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033429646134-898rd7tcqosrrnpkt43io4m70cmea64d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6fFOKsuJkP3tdKrtrNKmRlAAsypmh1fo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033429646134-898rd7tcqosrrnpkt43io4m70cmea64d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

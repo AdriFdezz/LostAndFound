@@ -2,15 +2,16 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.example.lostandfound"
+    namespace = "com.adrifdezz.lostandfound"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.lostandfound"
-        minSdk = 21
+        applicationId = "com.adrifdezz.lostandfound"
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -27,20 +28,22 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,6 +52,26 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // Firebase BOM
+    implementation(platform(libs.firebase.bom))
+
+    // Firebase Analytics
+    implementation(libs.firebase.analytics)
+
+    // Firebase Authentication (si lo necesitas)
+    implementation(libs.firebase.auth)
+
+    // Firestore (si lo necesitas)
+    implementation(libs.firebase.firestore)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.monitor)
+    implementation(libs.androidx.espresso.core)
+
+    // Otros servicios de Firebase que puedas necesitar
+    // Ejemplo de Firebase Cloud Messaging:
+    // implementation("com.google.firebase:firebase-messaging")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

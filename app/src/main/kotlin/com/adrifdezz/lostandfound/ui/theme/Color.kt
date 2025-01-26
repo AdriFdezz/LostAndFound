@@ -1,4 +1,4 @@
-package com.example.lostandfound.ui.theme
+package com.adrifdezz.lostandfound.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
