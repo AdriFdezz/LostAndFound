@@ -17,7 +17,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     val isLoginSuccess = MutableLiveData(false)
 
-    fun register(email: String, password: String) {
+    fun register(email: String, password: String, name: String) {
         authRepository.register(email, password) { user, error ->
             if (user != null) {
                 _user.postValue(user)
@@ -31,7 +31,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         authRepository.login(email, password) { user, error ->
             if (user != null) {
                 _user.postValue(user)
-                isLoginSuccess.postValue(true) // Marcamos como éxito solo para login
+                isLoginSuccess.postValue(true)
             } else {
                 _error.postValue(error)
             }

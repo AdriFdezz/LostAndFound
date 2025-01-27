@@ -25,7 +25,7 @@ class AuthActivity : ComponentActivity() {
 
             NavHost(navController = navController, startDestination = "auth_screen") {
                 composable("auth_screen") {
-                    AuthScreen(authViewModel = authViewModel, navController = navController)
+                    AuthScreen(authViewModel = authViewModel)
                 }
                 composable("welcome_screen") {
                     WelcomeScreen()
