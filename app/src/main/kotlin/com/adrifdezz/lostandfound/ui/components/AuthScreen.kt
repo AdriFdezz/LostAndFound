@@ -1,15 +1,26 @@
 package com.adrifdezz.lostandfound.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.adrifdezz.lostandfound.ui.utils.BotonMostrarOcultarContrasena
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
+import com.adrifdezz.lostandfound.ui.utils.validarContrasena
+import kotlinx.coroutines.delay
 
 @Composable
 fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
@@ -19,12 +30,13 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
     var confirmarContrasena by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
     var mensajeError by remember { mutableStateOf("") }
+    var registroExitoso by remember { mutableStateOf(false) }
+    var mostrarContrasena by remember { mutableStateOf(false) }
+    var mostrarConfirmarContrasena by remember { mutableStateOf(false) }
 
-    // Observamos los estados de error y usuario registrado
     val errorState by authViewModel.error.observeAsState()
     val usuarioRegistrado by authViewModel.usuario.observeAsState()
 
-    // Manejar errores
     LaunchedEffect(errorState) {
         errorState?.let {
             mensajeError = it
@@ -35,13 +47,29 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
         }
     }
 
-    // Si el usuario se ha registrado, cambiar automáticamente a inicio de sesión
     LaunchedEffect(usuarioRegistrado) {
         usuarioRegistrado?.let {
-            esModoRegistro = false  // Cambiar a pantalla de inicio de sesión automáticamente
-            mensajeError = "" // Limpiar mensaje de error
+            esModoRegistro = false
+            mensajeError = ""
+            registroExitoso = true
         }
     }
+
+    var progress by remember { mutableFloatStateOf(1f) }
+
+    LaunchedEffect(registroExitoso) {
+        if (registroExitoso) {
+            progress = 1f
+            delay(5000)
+            registroExitoso = false
+        }
+    }
+
+    val animatedProgress by animateFloatAsState(
+        targetValue = if (registroExitoso) 0f else 1f,
+        animationSpec = tween(durationMillis = 5000),
+        label = "Animación de la barra de progreso"
+    )
 
     Column(
         modifier = Modifier
@@ -81,7 +109,8 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
             onValueChange = { contrasena = it },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = if (mostrarContrasena) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = { BotonMostrarOcultarContrasena(mostrarContrasena) { mostrarContrasena = !mostrarContrasena } }
         )
 
         if (esModoRegistro) {
@@ -92,7 +121,9 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
                 onValueChange = { confirmarContrasena = it },
                 label = { Text("Confirmar contraseña") },
                 modifier = Modifier.fillMaxWidth(),
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = if (mostrarConfirmarContrasena) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = { BotonMostrarOcultarContrasena(mostrarConfirmarContrasena) { mostrarConfirmarContrasena = !mostrarConfirmarContrasena } }
+
             )
         }
 
@@ -117,8 +148,8 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
                         mensajeError = "El correo no puede estar vacío"
                         return@Button
                     }
-                    if (contrasena.isBlank()) {
-                        mensajeError = "La contraseña no puede estar vacía"
+                    if (!validarContrasena(contrasena)) {
+                        mensajeError = "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
                         return@Button
                     }
                     if (contrasena != confirmarContrasena) {
@@ -162,4 +193,41 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
             )
         }
     }
-}
+
+    if (registroExitoso) {
+        Snackbar(
+            modifier = Modifier
+                .padding(16.dp)
+                .alpha(0.9f),
+            shape = RoundedCornerShape(8.dp),
+            containerColor = Color(0xFFD1C4E9),
+            action = {
+                IconButton(onClick = { registroExitoso = false }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Cerrar",
+                        tint = Color.Black
+                    )
+                }
+            }
+        ) {
+            Column {
+                Text(
+                    text = "Registro exitoso",
+                    color = Color.Black,
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+            }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                LinearProgressIndicator(
+                    progress = { animatedProgress },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(3.dp),
+                    color = Color.Gray,
+                )
+            }
+        }
+    }
