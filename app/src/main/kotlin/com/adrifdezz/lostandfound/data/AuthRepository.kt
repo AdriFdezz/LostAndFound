@@ -5,37 +5,37 @@ import com.google.firebase.auth.FirebaseUser
 
 class AuthRepository {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val autenticacionFirebase: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun register(email: String, password: String, callback: (FirebaseUser?, String?) -> Unit) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    callback(firebaseAuth.currentUser, null)
+    fun registrar(correo: String, contrasena: String, callback: (FirebaseUser?, String?) -> Unit) {
+        autenticacionFirebase.createUserWithEmailAndPassword(correo, contrasena)
+            .addOnCompleteListener { tarea ->
+                if (tarea.isSuccessful) {
+                    callback(autenticacionFirebase.currentUser, null)
                 } else {
-                    callback(null, task.exception?.localizedMessage ?: "Error desconocido.")
+                    callback(null, tarea.exception?.localizedMessage ?: "Error desconocido.")
                 }
             }
     }
 
-    fun login(email: String, password: String, callback: (FirebaseUser?, String?) -> Unit) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    callback(firebaseAuth.currentUser, null)
+    fun iniciarSesion(correo: String, contrasena: String, callback: (FirebaseUser?, String?) -> Unit) {
+        autenticacionFirebase.signInWithEmailAndPassword(correo, contrasena)
+            .addOnCompleteListener { tarea ->
+                if (tarea.isSuccessful) {
+                    callback(autenticacionFirebase.currentUser, null)
                 } else {
-                    val errorMessage = translateFirebaseError(task.exception?.message)
-                    callback(null, errorMessage)
+                    val mensajeError = traducirErrorFirebase(tarea.exception?.message)
+                    callback(null, mensajeError)
                 }
             }
     }
 
-    private fun translateFirebaseError(firebaseError: String?): String {
-        return when (firebaseError) {
+    private fun traducirErrorFirebase(errorFirebase: String?): String {
+        return when (errorFirebase) {
             "The email address is badly formatted." -> "La dirección de correo electrónico tiene un formato incorrecto."
             "There is no user record corresponding to this identifier. The user may have been deleted." -> "No hay un registro de usuario correspondiente a este identificador. El usuario puede haber sido eliminado."
             "The password is invalid or the user does not have a password." -> "La contraseña es inválida o el usuario no tiene una contraseña."
-            "The supplied auth credential is incorrect, malformed or has expired." -> "Las credenciales son incorrectas, Vuelve a intentarlo."
+            "The supplied auth credential is incorrect, malformed or has expired." -> "Las credenciales son incorrectas, vuelve a intentarlo."
             else -> "Credenciales incorrectas. Vuelve a intentarlo."
         }
     }

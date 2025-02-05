@@ -12,12 +12,12 @@ import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 
 @Composable
 fun AuthScreen(authViewModel: AuthViewModel) {
-    var isRegisterMode by remember { mutableStateOf(false) }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
+    var esModoRegistro by remember { mutableStateOf(false) }
+    var correo by remember { mutableStateOf("") }
+    var contrasena by remember { mutableStateOf("") }
+    var confirmarContrasena by remember { mutableStateOf("") }
+    var nombre by remember { mutableStateOf("") }
+    var mensajeError by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -27,16 +27,16 @@ fun AuthScreen(authViewModel: AuthViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = if (isRegisterMode) "Registrarse" else "Iniciar sesión",
+            text = if (esModoRegistro) "Registrarse" else "Iniciar sesión",
             style = MaterialTheme.typography.headlineLarge
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (isRegisterMode) {
+        if (esModoRegistro) {
             TextField(
-                value = name,
-                onValueChange = { name = it },
+                value = nombre,
+                onValueChange = { nombre = it },
                 label = { Text("Nombre") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -44,8 +44,8 @@ fun AuthScreen(authViewModel: AuthViewModel) {
         }
 
         TextField(
-            value = email,
-            onValueChange = { email = it },
+            value = correo,
+            onValueChange = { correo = it },
             label = { Text("Correo electrónico") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -53,19 +53,19 @@ fun AuthScreen(authViewModel: AuthViewModel) {
         Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
-            value = password,
-            onValueChange = { password = it },
+            value = contrasena,
+            onValueChange = { contrasena = it },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation()
         )
 
-        if (isRegisterMode) {
+        if (esModoRegistro) {
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
+                value = confirmarContrasena,
+                onValueChange = { confirmarContrasena = it },
                 label = { Text("Confirmar contraseña") },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation()
@@ -74,59 +74,59 @@ fun AuthScreen(authViewModel: AuthViewModel) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (errorMessage.isNotEmpty()) {
-            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+        if (mensajeError.isNotEmpty()) {
+            Text(text = mensajeError, color = MaterialTheme.colorScheme.error)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
-                errorMessage = ""
+                mensajeError = ""
 
-                if (isRegisterMode) {
-                    if (password != confirmPassword) {
-                        errorMessage = "Las contraseñas no coinciden"
+                if (esModoRegistro) {
+                    if (contrasena != confirmarContrasena) {
+                        mensajeError = "Las contraseñas no coinciden"
                         return@Button
                     }
-                    if (name.isBlank()) {
-                        errorMessage = "El nombre no puede estar vacío"
+                    if (nombre.isBlank()) {
+                        mensajeError = "El nombre no puede estar vacío"
                         return@Button
                     }
-                    authViewModel.register(email, password, name)
-                    email = ""
-                    password = ""
-                    confirmPassword = ""
-                    name = ""
-                    isRegisterMode = false
+                    authViewModel.registrar(correo, contrasena, nombre)
+                    correo = ""
+                    contrasena = ""
+                    confirmarContrasena = ""
+                    nombre = ""
+                    esModoRegistro = false
                 } else {
-                    authViewModel.login(email, password)
+                    authViewModel.iniciarSesion(correo, contrasena)
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = if (isRegisterMode) "Registrarse" else "Iniciar sesión")
+            Text(text = if (esModoRegistro) "Registrarse" else "Iniciar sesión")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(
             onClick = {
-                isRegisterMode = !isRegisterMode
-                errorMessage = ""
-                email = ""
-                password = ""
-                confirmPassword = ""
-                name = ""
+                esModoRegistro = !esModoRegistro
+                mensajeError = ""
+                correo = ""
+                contrasena = ""
+                confirmarContrasena = ""
+                nombre = ""
             }
         ) {
             Text(
-                text = if (isRegisterMode) "¿Ya tienes una cuenta? Inicia sesión" else "¿No tienes una cuenta? Regístrate"
+                text = if (esModoRegistro) "¿Ya tienes una cuenta? Inicia sesión" else "¿No tienes una cuenta? Regístrate"
             )
         }
     }
 
     authViewModel.error.observe(LocalLifecycleOwner.current) { error ->
-        errorMessage = error ?: ""
+        mensajeError = error ?: ""
     }
 }

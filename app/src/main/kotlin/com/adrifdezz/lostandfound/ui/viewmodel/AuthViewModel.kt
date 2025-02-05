@@ -9,29 +9,29 @@ import com.google.firebase.auth.FirebaseUser
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
-    private val _user = MutableLiveData<FirebaseUser?>()
-    val user: LiveData<FirebaseUser?> get() = _user
+    private val _usuario = MutableLiveData<FirebaseUser?>()
+    val usuario: LiveData<FirebaseUser?> get() = _usuario
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
-    val isLoginSuccess = MutableLiveData(false)
+    val esInicioSesionExitoso = MutableLiveData(false)
 
-    fun register(email: String, password: String, name: String) {
-        authRepository.register(email, password) { user, error ->
-            if (user != null) {
-                _user.postValue(user)
+    fun registrar(correo: String, contrasena: String, nombre: String) {
+        authRepository.registrar(correo, contrasena) { usuario, error ->
+            if (usuario != null) {
+                _usuario.postValue(usuario)
             } else {
                 _error.postValue(error)
             }
         }
     }
 
-    fun login(email: String, password: String) {
-        authRepository.login(email, password) { user, error ->
-            if (user != null) {
-                _user.postValue(user)
-                isLoginSuccess.postValue(true)
+    fun iniciarSesion(correo: String, contrasena: String) {
+        authRepository.iniciarSesion(correo, contrasena) { usuario, error ->
+            if (usuario != null) {
+                _usuario.postValue(usuario)
+                esInicioSesionExitoso.postValue(true)
             } else {
                 _error.postValue(error)
             }

@@ -32,9 +32,9 @@ class AuthActivity : ComponentActivity() {
                 }
             }
 
-            authViewModel.isLoginSuccess.observe(this) { isSuccess ->
-                if (isSuccess) {
-                    navController.navigate("welcome_screen") // Navegar a la pantalla de bienvenida
+            authViewModel.esInicioSesionExitoso.observe(this) { esExitoso ->
+                if (esExitoso) {
+                    navController.navigate("welcome_screen")
                 }
             }
         }
