@@ -3,21 +3,45 @@ package com.adrifdezz.lostandfound.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 
 @Composable
-fun AuthScreen(authViewModel: AuthViewModel) {
+fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
     var esModoRegistro by remember { mutableStateOf(false) }
     var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
     var confirmarContrasena by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
     var mensajeError by remember { mutableStateOf("") }
+
+    // Observamos los estados de error y usuario registrado
+    val errorState by authViewModel.error.observeAsState()
+    val usuarioRegistrado by authViewModel.usuario.observeAsState()
+
+    // Manejar errores
+    LaunchedEffect(errorState) {
+        errorState?.let {
+            mensajeError = it
+            correo = ""
+            contrasena = ""
+            confirmarContrasena = ""
+            nombre = ""
+        }
+    }
+
+    // Si el usuario se ha registrado, cambiar automáticamente a inicio de sesión
+    LaunchedEffect(usuarioRegistrado) {
+        usuarioRegistrado?.let {
+            esModoRegistro = false  // Cambiar a pantalla de inicio de sesión automáticamente
+            mensajeError = "" // Limpiar mensaje de error
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -85,21 +109,34 @@ fun AuthScreen(authViewModel: AuthViewModel) {
                 mensajeError = ""
 
                 if (esModoRegistro) {
-                    if (contrasena != confirmarContrasena) {
-                        mensajeError = "Las contraseñas no coinciden"
-                        return@Button
-                    }
                     if (nombre.isBlank()) {
                         mensajeError = "El nombre no puede estar vacío"
                         return@Button
                     }
+                    if (correo.isBlank()) {
+                        mensajeError = "El correo no puede estar vacío"
+                        return@Button
+                    }
+                    if (contrasena.isBlank()) {
+                        mensajeError = "La contraseña no puede estar vacía"
+                        return@Button
+                    }
+                    if (contrasena != confirmarContrasena) {
+                        mensajeError = "Las contraseñas no coinciden"
+                        return@Button
+                    }
+
                     authViewModel.registrar(correo, contrasena, nombre)
-                    correo = ""
-                    contrasena = ""
-                    confirmarContrasena = ""
-                    nombre = ""
-                    esModoRegistro = false
                 } else {
+                    if (correo.isBlank()) {
+                        mensajeError = "El correo no puede estar vacío"
+                        return@Button
+                    }
+                    if (contrasena.isBlank()) {
+                        mensajeError = "La contraseña no puede estar vacía"
+                        return@Button
+                    }
+
                     authViewModel.iniciarSesion(correo, contrasena)
                 }
             },
@@ -124,9 +161,5 @@ fun AuthScreen(authViewModel: AuthViewModel) {
                 text = if (esModoRegistro) "¿Ya tienes una cuenta? Inicia sesión" else "¿No tienes una cuenta? Regístrate"
             )
         }
-    }
-
-    authViewModel.error.observe(LocalLifecycleOwner.current) { error ->
-        mensajeError = error ?: ""
     }
 }
