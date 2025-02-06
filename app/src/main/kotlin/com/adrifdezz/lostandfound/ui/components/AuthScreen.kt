@@ -219,15 +219,15 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
                 )
             }
 
-                Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-                LinearProgressIndicator(
-                    progress = { animatedProgress },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp),
-                    color = Color.Gray,
-                )
-            }
+            LinearProgressIndicator(
+                progress = { animatedProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp),
+                color = Color.Gray,
+            )
         }
     }
+}

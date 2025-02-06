@@ -18,7 +18,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     val esInicioSesionExitoso = MutableLiveData(false)
 
     fun registrar(correo: String, contrasena: String, nombre: String) {
-        authRepository.registrar(correo, contrasena) { usuario, error ->
+        authRepository.registrar(correo, contrasena, nombre) { usuario, error ->
             if (usuario != null) {
                 _usuario.postValue(usuario)
             } else {

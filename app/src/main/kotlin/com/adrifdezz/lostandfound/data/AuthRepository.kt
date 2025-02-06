@@ -2,20 +2,48 @@ package com.adrifdezz.lostandfound.data
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthRepository {
 
     private val autenticacionFirebase: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun registrar(correo: String, contrasena: String, callback: (FirebaseUser?, String?) -> Unit) {
-        autenticacionFirebase.createUserWithEmailAndPassword(correo, contrasena)
-            .addOnCompleteListener { tarea ->
-                if (tarea.isSuccessful) {
-                    callback(autenticacionFirebase.currentUser, null)
+    fun registrar(correo: String, contrasena: String, nombre: String, callback: (FirebaseUser?, String?) -> Unit) {
+        val firestoreDB = FirebaseFirestore.getInstance()
+
+        firestoreDB.collection("usuarios")
+            .whereEqualTo("nombre", nombre)
+            .get()
+            .addOnSuccessListener { documentos ->
+                if (!documentos.isEmpty) {
+                    callback(null, "El nombre de usuario ya está en uso. Elige otro.")
                 } else {
-                    val errorMensaje = traducirErrorFirebase(tarea.exception?.message)
-                    callback(null, errorMensaje)
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(correo, contrasena)
+                        .addOnCompleteListener { tarea ->
+                            if (tarea.isSuccessful) {
+                                val usuario = tarea.result?.user
+                                usuario?.let {
+                                    val usuarioData = hashMapOf(
+                                        "nombre" to nombre,
+                                        "correo" to correo
+                                    )
+                                    firestoreDB.collection("usuarios").document(it.uid).set(usuarioData)
+                                        .addOnSuccessListener {
+                                            callback(usuario, null)
+                                        }
+                                        .addOnFailureListener { e ->
+                                            callback(null, "Error al guardar datos en Firestore: ${e.message}")
+                                        }
+                                }
+                            } else {
+                                val mensajeError = traducirErrorFirebase(tarea.exception?.message)
+                                callback(null, mensajeError)
+                            }
+                        }
                 }
+            }
+            .addOnFailureListener { e ->
+                callback(null, "Error al verificar nombre: ${e.message}")
             }
     }
 
