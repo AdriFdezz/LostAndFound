@@ -1,11 +1,10 @@
 package com.adrifdezz.lostandfound.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
@@ -15,7 +14,19 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
+    private val _mensajeRecuperacion = MutableLiveData<String?>()
+    val mensajeRecuperacion: LiveData<String?> get() = _mensajeRecuperacion
+
     val esInicioSesionExitoso = MutableLiveData(false)
+
+    // 🔹 Variables para el cooldown
+    private val _lastRequestTime = MutableLiveData(0L)
+    val lastRequestTime: LiveData<Long> get() = _lastRequestTime
+
+    private val _remainingTime = MutableLiveData(0L)
+    val remainingTime: LiveData<Long> get() = _remainingTime
+
+    private val cooldownTime = 60_000L // 60 segundos en milisegundos
 
     fun registrar(correo: String, contrasena: String, nombre: String) {
         authRepository.registrar(correo, contrasena, nombre) { usuario, error ->
@@ -36,6 +47,46 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 _error.postValue(error)
             }
         }
+    }
+
+    fun recuperarContrasena(correo: String) {
+        authRepository.recuperarContrasena(correo) { exito, mensaje ->
+            _mensajeRecuperacion.postValue(mensaje)
+            if (exito) {
+                _lastRequestTime.postValue(System.currentTimeMillis())
+                _remainingTime.postValue(cooldownTime / 1000)
+                iniciarContadorCooldown()
+            }
+        }
+    }
+
+    private fun iniciarContadorCooldown() {
+        viewModelScope.launch {
+            while ((_remainingTime.value ?: 0) > 0) {
+                delay(1000L)
+                reducirTiempoCooldown()
+            }
+        }
+    }
+
+    fun reducirTiempoCooldown() {
+        val tiempoRestante = (_remainingTime.value ?: 1) - 1
+        _remainingTime.postValue(if (tiempoRestante >= 0) tiempoRestante else 0)
+    }
+
+    fun calcularTiempoRestante() {
+        val currentTime = System.currentTimeMillis()
+        val elapsedTime = currentTime - (_lastRequestTime.value ?: 0)
+        if (elapsedTime < cooldownTime) {
+            _remainingTime.postValue((cooldownTime - elapsedTime) / 1000)
+        } else {
+            _remainingTime.postValue(0L)
+            _lastRequestTime.postValue(0L)
+        }
+    }
+
+    fun limpiarMensajeRecuperacion() {
+        _mensajeRecuperacion.postValue(null)
     }
 
     class Factory(private val repository: AuthRepository) : ViewModelProvider.Factory {

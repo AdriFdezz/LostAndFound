@@ -17,13 +17,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.adrifdezz.lostandfound.ui.utils.BotonMostrarOcultarContrasena
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.ui.utils.validarContrasena
 import kotlinx.coroutines.delay
 
 @Composable
-fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
+fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavController) {
     var esModoRegistro by remember { mutableStateOf(false) }
     var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
@@ -178,6 +179,14 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        if (!esModoRegistro) {
+            TextButton(
+                onClick = { navController.navigate("password_recovery_screen") }
+            ) {
+                Text(text = "¿Olvidaste tu contraseña?")
+            }
+        }
+
         TextButton(
             onClick = {
                 esModoRegistro = !esModoRegistro
@@ -225,7 +234,7 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
                 progress = { animatedProgress },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(8.dp),
+                    .height(6.dp),
                 color = Color.Gray,
             )
         }

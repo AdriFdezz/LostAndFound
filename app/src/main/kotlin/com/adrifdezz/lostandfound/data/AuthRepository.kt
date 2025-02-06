@@ -59,14 +59,31 @@ class AuthRepository {
             }
     }
 
+    fun recuperarContrasena(correo: String, callback: (Boolean, String) -> Unit) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(correo)
+            .addOnCompleteListener { tarea ->
+                if (tarea.isSuccessful) {
+                    println("DEBUG: Correo de recuperación enviado a $correo")
+                    callback(true, "Correo de recuperación enviado")
+                } else {
+                    println("DEBUG: Error al enviar correo - ${tarea.exception?.message}")
+                    val mensajeError = traducirErrorFirebase(tarea.exception?.message)
+                    callback(false, mensajeError)
+                }
+            }
+    }
+
     private fun traducirErrorFirebase(errorFirebase: String?): String {
         return when (errorFirebase) {
             "The email address is badly formatted." -> "La dirección de correo electrónico tiene un formato incorrecto."
-            "There is no user record corresponding to this identifier. The user may have been deleted." -> "No hay un registro de usuario correspondiente a este identificador. El usuario puede haber sido eliminado."
+            "There is no user record corresponding to this identifier. The user may have been deleted." -> "No hay una cuenta registrada con este correo."
             "The password is invalid or the user does not have a password." -> "La contraseña es inválida o el usuario no tiene una contraseña."
             "The supplied auth credential is incorrect, malformed or has expired." -> "Las credenciales son incorrectas, vuelve a intentarlo."
             "The email address is already in use by another account." -> "Este correo ya está registrado. Usa otro correo o inicia sesión."
-            else -> "Credenciales incorrectas. Vuelve a intentarlo."
+            "A network error (such as timeout, interrupted connection or unreachable host) has occurred." -> "Error de red. Verifica tu conexión a Internet."
+            "We have blocked all requests from this device due to unusual activity. Try again later." -> "Hemos bloqueado las solicitudes desde este dispositivo debido a actividad inusual. Inténtalo más tarde."
+            "Too many unsuccessful login attempts. Please try again later." -> "Demasiados intentos fallidos. Inténtalo más tarde."
+            else -> "Ocurrió un error, intenta de nuevo."
         }
     }
 }

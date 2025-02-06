@@ -8,6 +8,7 @@ import androidx.navigation.compose.*
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.ui.components.AuthScreen
+import com.adrifdezz.lostandfound.ui.components.PasswordRecoveryScreen
 import com.adrifdezz.lostandfound.ui.components.WelcomeScreen
 
 class AuthActivity : ComponentActivity() {
@@ -25,10 +26,15 @@ class AuthActivity : ComponentActivity() {
 
             NavHost(navController = navController, startDestination = "auth_screen") {
                 composable("auth_screen") {
-                    AuthScreen(authViewModel = authViewModel)
+                    AuthScreen(authViewModel = authViewModel, navController = navController)
                 }
                 composable("welcome_screen") {
                     WelcomeScreen()
+                }
+                composable("password_recovery_screen") {
+                    PasswordRecoveryScreen(authViewModel = authViewModel) {
+                        navController.navigate("auth_screen")
+                    }
                 }
             }
 
