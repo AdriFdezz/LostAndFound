@@ -19,14 +19,11 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     val esInicioSesionExitoso = MutableLiveData(false)
 
-    // 🔹 Variables para el cooldown
     private val _lastRequestTime = MutableLiveData(0L)
-    val lastRequestTime: LiveData<Long> get() = _lastRequestTime
-
     private val _remainingTime = MutableLiveData(0L)
     val remainingTime: LiveData<Long> get() = _remainingTime
 
-    private val cooldownTime = 60_000L // 60 segundos en milisegundos
+    private val cooldownTime = 60_000L
 
     fun registrar(correo: String, contrasena: String, nombre: String) {
         authRepository.registrar(correo, contrasena, nombre) { usuario, error ->
@@ -50,11 +47,17 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     }
 
     fun recuperarContrasena(correo: String) {
+        if ((_remainingTime.value ?: 0) > 0) {
+            return
+        }
+
         authRepository.recuperarContrasena(correo) { exito, mensaje ->
             _mensajeRecuperacion.postValue(mensaje)
             if (exito) {
-                _lastRequestTime.postValue(System.currentTimeMillis())
-                _remainingTime.postValue(cooldownTime / 1000)
+                val tiempoActual = System.currentTimeMillis()
+                _lastRequestTime.postValue(tiempoActual)
+                _remainingTime.value = cooldownTime / 1000
+                println("✅ Correo enviado. Iniciando cooldown: ${_remainingTime.value}")
                 iniciarContadorCooldown()
             }
         }
@@ -64,24 +67,24 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             while ((_remainingTime.value ?: 0) > 0) {
                 delay(1000L)
-                reducirTiempoCooldown()
+                val tiempoRestante = (_remainingTime.value ?: 1) - 1
+                _remainingTime.postValue(if (tiempoRestante >= 0) tiempoRestante else 0)
             }
         }
-    }
-
-    fun reducirTiempoCooldown() {
-        val tiempoRestante = (_remainingTime.value ?: 1) - 1
-        _remainingTime.postValue(if (tiempoRestante >= 0) tiempoRestante else 0)
     }
 
     fun calcularTiempoRestante() {
         val currentTime = System.currentTimeMillis()
         val elapsedTime = currentTime - (_lastRequestTime.value ?: 0)
+
+
         if (elapsedTime < cooldownTime) {
-            _remainingTime.postValue((cooldownTime - elapsedTime) / 1000)
+            val tiempoRestante = (cooldownTime - elapsedTime) / 1000
+            _remainingTime.value = tiempoRestante
+            iniciarContadorCooldown()
         } else {
-            _remainingTime.postValue(0L)
-            _lastRequestTime.postValue(0L)
+            _remainingTime.value = 0L
+            _lastRequestTime.value = 0L
         }
     }
 
