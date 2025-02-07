@@ -1,27 +1,29 @@
 package com.adrifdezz.lostandfound.ui.components
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.adrifdezz.lostandfound.R
 import com.adrifdezz.lostandfound.ui.utils.BotonMostrarOcultarContrasena
-import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.ui.utils.validarContrasena
-import kotlinx.coroutines.delay
+import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 
 @Composable
 fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavController) {
@@ -56,187 +58,145 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
         }
     }
 
-    var progress by remember { mutableFloatStateOf(1f) }
-
-    LaunchedEffect(registroExitoso) {
-        if (registroExitoso) {
-            progress = 1f
-            delay(5000)
-            registroExitoso = false
-        }
-    }
-
-    val animatedProgress by animateFloatAsState(
-        targetValue = if (registroExitoso) 0f else 1f,
-        animationSpec = tween(durationMillis = 5000),
-        label = "Animación de la barra de progreso"
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = if (esModoRegistro) "Registrarse" else "Iniciar sesión",
-            style = MaterialTheme.typography.headlineLarge
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.fondo_distorsion),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (esModoRegistro) {
-            TextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Nombre") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-
-        TextField(
-            value = correo,
-            onValueChange = { correo = it },
-            label = { Text("Correo electrónico") },
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Brush.verticalGradient(listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent)))
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = contrasena,
-            onValueChange = { contrasena = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = if (mostrarContrasena) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = { BotonMostrarOcultarContrasena(mostrarContrasena) { mostrarContrasena = !mostrarContrasena } }
-        )
-
-        if (esModoRegistro) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextField(
-                value = confirmarContrasena,
-                onValueChange = { confirmarContrasena = it },
-                label = { Text("Confirmar contraseña") },
-                modifier = Modifier.fillMaxWidth(),
-                visualTransformation = if (mostrarConfirmarContrasena) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = { BotonMostrarOcultarContrasena(mostrarConfirmarContrasena) { mostrarConfirmarContrasena = !mostrarConfirmarContrasena } }
-
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (mensajeError.isNotEmpty()) {
-            Text(text = mensajeError, color = MaterialTheme.colorScheme.error)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                mensajeError = ""
-
-                if (esModoRegistro) {
-                    if (nombre.isBlank()) {
-                        mensajeError = "El nombre no puede estar vacío"
-                        return@Button
-                    }
-                    if (correo.isBlank()) {
-                        mensajeError = "El correo no puede estar vacío"
-                        return@Button
-                    }
-                    if (!validarContrasena(contrasena)) {
-                        mensajeError = "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
-                        return@Button
-                    }
-                    if (contrasena != confirmarContrasena) {
-                        mensajeError = "Las contraseñas no coinciden"
-                        return@Button
-                    }
-
-                    authViewModel.registrar(correo, contrasena, nombre)
-                } else {
-                    if (correo.isBlank()) {
-                        mensajeError = "El correo no puede estar vacío"
-                        return@Button
-                    }
-                    if (contrasena.isBlank()) {
-                        mensajeError = "La contraseña no puede estar vacía"
-                        return@Button
-                    }
-
-                    authViewModel.iniciarSesion(correo, contrasena)
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier.fillMaxSize().padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(text = if (esModoRegistro) "Registrarse" else "Iniciar sesión")
-        }
+            Text(
+                text = if (esModoRegistro) "Registrarse" else "Iniciar sesión",
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                color = Color.White
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        if (!esModoRegistro) {
-            TextButton(
-                onClick = { navController.navigate("password_recovery_screen") }
-            ) {
-                Text(text = "¿Olvidaste tu contraseña?")
+            if (esModoRegistro) {
+                AuthTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre")
             }
-        }
 
-        TextButton(
-            onClick = {
+            Spacer(modifier = Modifier.height(8.dp))
+            AuthTextField(value = correo, onValueChange = { correo = it }, label = "Correo electrónico")
+            Spacer(modifier = Modifier.height(8.dp))
+            AuthTextField(
+                value = contrasena,
+                onValueChange = { contrasena = it },
+                label = "Contraseña",
+                visualTransformation = if (mostrarContrasena) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = { BotonMostrarOcultarContrasena(mostrarContrasena) { mostrarContrasena = !mostrarContrasena } }
+            )
+
+            if (esModoRegistro) {
+                Spacer(modifier = Modifier.height(8.dp))
+                AuthTextField(
+                    value = confirmarContrasena,
+                    onValueChange = { confirmarContrasena = it },
+                    label = "Confirmar contraseña",
+                    visualTransformation = if (mostrarConfirmarContrasena) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = { BotonMostrarOcultarContrasena(mostrarConfirmarContrasena) { mostrarConfirmarContrasena = !mostrarConfirmarContrasena } }
+                )
+            }
+
+            if (mensajeError.isNotEmpty()) {
+                Text(text = mensajeError, color = Color(0xFFFF6F61), fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFECEFF1), RoundedCornerShape(10.dp))
+                    .height(50.dp),
+                onClick = {
+                    mensajeError = ""
+                    if (esModoRegistro) {
+                        if (nombre.isBlank()) mensajeError = "El nombre no puede estar vacío"
+                        else if (correo.isBlank()) mensajeError = "El correo no puede estar vacío"
+                        else if (!validarContrasena(contrasena)) mensajeError = "La contraseña debe tener al menos 8 caracteres y un número"
+                        else if (contrasena != confirmarContrasena) mensajeError = "Las contraseñas no coinciden"
+                        else authViewModel.registrar(correo, contrasena, nombre)
+                    } else {
+                        if (correo.isBlank()) mensajeError = "El correo no puede estar vacío"
+                        else if (contrasena.isBlank()) mensajeError = "La contraseña no puede estar vacía"
+                        else authViewModel.iniciarSesion(correo, contrasena)
+                    }
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.2f))
+            ) {
+                Text(
+                    text = if (esModoRegistro) "Registrarse" else "Iniciar sesión",
+                    color = Color(0xFF212121),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (!esModoRegistro) {
+                TextButton(onClick = { navController.navigate("password_recovery_screen") }) {
+                    Text(text = "¿Olvidaste tu contraseña?", color = Color.White)
+                }
+            }
+
+            TextButton(onClick = {
                 esModoRegistro = !esModoRegistro
                 mensajeError = ""
                 correo = ""
                 contrasena = ""
                 confirmarContrasena = ""
                 nombre = ""
+            }) {
+                Text(text = if (esModoRegistro) "¿Ya tienes una cuenta? Inicia sesión" else "¿No tienes una cuenta? Regístrate", color = Color.White)
             }
-        ) {
-            Text(
-                text = if (esModoRegistro) "¿Ya tienes una cuenta? Inicia sesión" else "¿No tienes una cuenta? Regístrate"
-            )
         }
     }
+}
 
-    if (registroExitoso) {
-        Snackbar(
-            modifier = Modifier
-                .padding(16.dp)
-                .alpha(0.9f),
-            shape = RoundedCornerShape(8.dp),
-            containerColor = Color(0xFFD1C4E9),
-            action = {
-                IconButton(onClick = { registroExitoso = false }) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Cerrar",
-                        tint = Color.Black
-                    )
-                }
-            }
-        ) {
-            Column {
-                Text(
-                    text = "Registro exitoso",
-                    color = Color.Black,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            LinearProgressIndicator(
-                progress = { animatedProgress },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(6.dp),
-                color = Color.Gray,
+@Composable
+fun AuthTextField(value: String, onValueChange: (String) -> Unit, label: String, visualTransformation: VisualTransformation = VisualTransformation.None, trailingIcon: @Composable (() -> Unit)? = null) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+            .padding(4.dp)
+    ) {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label, color = Color.White) },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            singleLine = true,
+            visualTransformation = visualTransformation,
+            trailingIcon = trailingIcon,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                cursorColor = Color.White,
+                focusedLabelColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
             )
-        }
+        )
     }
 }
