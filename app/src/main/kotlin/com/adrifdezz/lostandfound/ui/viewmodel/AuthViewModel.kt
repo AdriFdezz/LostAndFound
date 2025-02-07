@@ -1,5 +1,6 @@
 package com.adrifdezz.lostandfound.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.google.firebase.auth.FirebaseUser
@@ -52,7 +53,10 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
 
         authRepository.recuperarContrasena(correo) { exito, mensaje ->
+            Log.d("DEBUG", "🛑 Estado del mensajeRecuperacion antes: ${_mensajeRecuperacion.value}")  // 🔹 Debug
             _mensajeRecuperacion.postValue(mensaje)
+            Log.d("DEBUG", "✅ Estado del mensajeRecuperacion después: ${_mensajeRecuperacion.value}")  // 🔹 Debug
+
             if (exito) {
                 val tiempoActual = System.currentTimeMillis()
                 _lastRequestTime.postValue(tiempoActual)
@@ -88,9 +92,28 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    fun iniciarTemporizadorSiEsNecesario() {
+        if ((_remainingTime.value ?: 0) > 0) {
+            return
+        }
+
+        viewModelScope.launch {
+            while ((_remainingTime.value ?: 0) > 0) {
+                delay(1000L)
+                val nuevoTiempo = (_remainingTime.value ?: 1) - 1
+                _remainingTime.postValue(if (nuevoTiempo >= 0) nuevoTiempo else 0)
+            }
+        }
+    }
+
     fun limpiarMensajeRecuperacion() {
         _mensajeRecuperacion.postValue(null)
     }
+
+    fun actualizarTiempoRestante(nuevoTiempo: Long) {
+        _remainingTime.postValue(nuevoTiempo)
+    }
+
 
     class Factory(private val repository: AuthRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -1,9 +1,11 @@
 package com.adrifdezz.lostandfound.ui.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,41 +23,56 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.R
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.material3.AlertDialog
+import android.util.Log
 
 @Composable
 fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: () -> Unit) {
     var correo by remember { mutableStateOf("") }
     var errorCorreo by remember { mutableStateOf(false) }
+    var mostrarDialogo by remember { mutableStateOf(false) }  // 🔹 Estado para mostrar el diálogo
 
     val mensajeRecuperacion by authViewModel.mensajeRecuperacion.observeAsState()
     val remainingTime by authViewModel.remainingTime.observeAsState(0L)
 
     val coroutineScope = rememberCoroutineScope()
+    val animatedProgress = remember { Animatable(1f) }
 
     LaunchedEffect(Unit) {
         authViewModel.calcularTiempoRestante()
         authViewModel.limpiarMensajeRecuperacion()
+        authViewModel.iniciarTemporizadorSiEsNecesario()
     }
 
-    var progress by remember { mutableFloatStateOf(1f) }
+    // 🔹 Debug: Imprimir mensaje de recuperación en logs
+    Log.d("DEBUG", "MensajeRecuperacion: $mensajeRecuperacion")
 
-    LaunchedEffect(remainingTime) {
-        if (remainingTime > 0) {
-            coroutineScope.launch {
-                while (remainingTime > 0) {
-                    delay(1000L)
-                    progress = remainingTime / 60f
-                }
-            }
-        } else {
-            progress = 0f
+    // 🔹 Mostrar el AlertDialog cuando el mensaje de recuperación se actualiza
+    LaunchedEffect(mensajeRecuperacion) {
+        Log.d("DEBUG", "📩 LaunchedEffect detectó mensajeRecuperacion: $mensajeRecuperacion")  // 🔹 Debug
+
+        if (mensajeRecuperacion == "Correo de recuperación enviado") {
+            Log.d("DEBUG", "✅ Se activó el AlertDialog")  // 🔹 Debug
+            mostrarDialogo = true
         }
     }
 
-    val errorColor = Color(0xFFFF6F61) // 🔹 Rojo menos brillante para errores
-    val buttonBackground = Color.White.copy(alpha = 0.2f) // 🔹 Fondo gris semitransparente
+    LaunchedEffect(remainingTime) {
+        if (remainingTime > 0) {
+            animatedProgress.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = (remainingTime * 1000).toInt(), easing = LinearEasing)
+            )
+        } else {
+            coroutineScope.launch {
+                animatedProgress.snapTo(1f)
+            }
+        }
+    }
+
+    val errorColor = Color(0xFFFF6F61)
+    val buttonBackground = Color.White.copy(alpha = 0.2f)
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -162,6 +179,10 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                                 errorCorreo = true
                             } else {
                                 authViewModel.recuperarContrasena(correo)
+                                authViewModel.actualizarTiempoRestante(60)
+                                coroutineScope.launch {
+                                    animatedProgress.snapTo(1f)
+                                }
                             }
                         },
                         modifier = Modifier
@@ -184,11 +205,12 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
 
                     if (remainingTime > 0) {
                         LinearProgressIndicator(
-                            progress = { progress },
+                            progress = { animatedProgress.value },
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .height(6.dp)
                                 .align(Alignment.BottomCenter),
-                            color = Color(0xFFB0BEC5),
+                            color = Color.White.copy(alpha = 0.8f),
                             trackColor = Color.Transparent
                         )
                     }
@@ -196,24 +218,36 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Box(
-                    modifier = Modifier
-                        .background(buttonBackground, shape = CircleShape)
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                ) {
-                    TextButton(
-                        onClick = onBack,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = "Volver a Iniciar Sesión",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White
-                        )
-                    }
+                TextButton(onClick = onBack) {
+                    Text(
+                        text = "Volver a Iniciar Sesión",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White
+                    )
                 }
             }
         }
+    }
+
+    // 🔹 AlertDialog para confirmar que el correo se envió con éxito
+    if (mostrarDialogo) {
+        Log.d("DEBUG", "🛑 Se está mostrando el AlertDialog")  // 🔹 Debug
+        AlertDialog(
+            onDismissRequest = {
+                Log.d("DEBUG", "❌ Se cerró el AlertDialog")  // 🔹 Debug
+                mostrarDialogo = false
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    Log.d("DEBUG", "✅ Botón OK presionado en AlertDialog")  // 🔹 Debug
+                    mostrarDialogo = false
+                }) {
+                    Text("OK")
+                }
+            },
+            title = { Text("Correo enviado") },
+            text = { Text("📧 Se ha enviado un correo de recuperación con éxito.") }
+        )
     }
 }
