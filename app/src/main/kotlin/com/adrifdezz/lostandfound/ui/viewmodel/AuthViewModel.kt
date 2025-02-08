@@ -3,6 +3,7 @@ package com.adrifdezz.lostandfound.ui.viewmodel
 import androidx.lifecycle.*
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -45,6 +46,27 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 _error.postValue(error)
             }
         }
+    }
+
+    fun verificarCorreoEnFirestore(correo: String, onResult: (Boolean, String?) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("usuarios")
+            .whereEqualTo("correo", correo)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val documentos = task.result
+                    if (!documentos.isEmpty) {
+                        onResult(true, null)
+                    } else {
+                        onResult(false, "El correo no está registrado en nuestra base de datos.")
+                    }
+                } else {
+                    val error = task.exception?.localizedMessage ?: "Error desconocido al verificar el correo."
+                    onResult(false, error)
+                }
+            }
     }
 
     fun recuperarContrasena(correo: String) {

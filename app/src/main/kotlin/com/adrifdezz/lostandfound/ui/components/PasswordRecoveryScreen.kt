@@ -27,12 +27,19 @@ import androidx.compose.ui.text.style.TextAlign
 fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: () -> Unit) {
     var correo by remember { mutableStateOf("") }
     var errorCorreo by remember { mutableStateOf(false) }
+    var mensajeError by remember { mutableStateOf("") }
     var mostrarDialogo by remember { mutableStateOf(false) }
 
     val mensajeRecuperacion by authViewModel.mensajeRecuperacion.observeAsState()
     val remainingTime by authViewModel.remainingTime.observeAsState(0L)
 
+    val coroutineScope = rememberCoroutineScope()
     val animatedProgress = remember { Animatable(1f) }
+
+    val remainingTimeState = remember { mutableLongStateOf(remainingTime) }
+    LaunchedEffect(remainingTime) {
+        remainingTimeState.longValue = remainingTime
+    }
 
     LaunchedEffect(Unit) {
         authViewModel.calcularTiempoRestante()
@@ -46,20 +53,11 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
         }
     }
 
-    LaunchedEffect(mostrarDialogo) {
-        if (!mostrarDialogo) {
-            authViewModel.limpiarMensajeRecuperacion()
-        }
-    }
-
     LaunchedEffect(key1 = remainingTime) {
         val cooldownDuration = authViewModel.cooldownTime / 1000f
-
         val currentProgress = remainingTime.toFloat() / cooldownDuration
 
-        if (animatedProgress.value != currentProgress) {
-            animatedProgress.snapTo(currentProgress)
-        }
+        animatedProgress.snapTo(currentProgress)
     }
 
     val errorColor = Color(0xFFFF6F61)
@@ -116,6 +114,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                         onValueChange = {
                             correo = it
                             errorCorreo = false
+                            mensajeError = ""
                         },
                         label = { Text("Correo electrónico", color = Color.White) },
                         modifier = Modifier.fillMaxWidth(),
@@ -135,9 +134,9 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                     )
                 }
 
-                if (errorCorreo) {
+                if (mensajeError.isNotEmpty()) {
                     Text(
-                        text = "El correo no puede estar vacío.",
+                        text = mensajeError,
                         color = errorColor,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
@@ -158,25 +157,33 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                     Button(
                         onClick = {
                             if (correo.isBlank()) {
+                                mensajeError = "Por favor, ingresa un correo válido."
                                 errorCorreo = true
                             } else {
-                                authViewModel.recuperarContrasena(correo)
-                                authViewModel.actualizarTiempoRestante(60)
+                                authViewModel.verificarCorreoEnFirestore(correo) { registrado, error ->
+                                    if (registrado) {
+                                        authViewModel.recuperarContrasena(correo)
+                                        authViewModel.actualizarTiempoRestante(60)
+                                    } else {
+                                        mensajeError = error ?: "Error desconocido al verificar el correo."
+                                        errorCorreo = true
+                                    }
+                                }
                             }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .alpha(if (remainingTime > 0) 0.5f else 1f),
+                            .alpha(if (remainingTimeState.longValue > 0) 0.5f else 1f),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
-                            contentColor = if (remainingTime > 0) Color(0xFFB0BEC5) else Color(0xFF263238)
+                            contentColor = if (remainingTimeState.longValue > 0) Color(0xFFB0BEC5) else Color(0xFF263238)
                         ),
-                        enabled = remainingTime == 0L
+                        enabled = remainingTimeState.longValue == 0L
                     ) {
                         Text(
-                            text = if (remainingTime > 0) "Esperando..." else "Enviar correo de recuperación",
+                            text = if (remainingTimeState.longValue > 0) "Esperando..." else "Enviar correo de recuperación",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
