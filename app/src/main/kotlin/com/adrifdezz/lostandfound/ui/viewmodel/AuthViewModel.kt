@@ -53,9 +53,13 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
 
         authRepository.recuperarContrasena(correo) { exito, mensaje ->
-            Log.d("DEBUG", "🛑 Estado del mensajeRecuperacion antes: ${_mensajeRecuperacion.value}")  // 🔹 Debug
-            _mensajeRecuperacion.postValue(mensaje)
-            Log.d("DEBUG", "✅ Estado del mensajeRecuperacion después: ${_mensajeRecuperacion.value}")  // 🔹 Debug
+            Log.d("DEBUG", "🛑 Estado del mensajeRecuperacion antes: ${_mensajeRecuperacion.value}")
+            if (exito) {
+                _mensajeRecuperacion.postValue("Correo de recuperación enviado")
+            } else {
+                _mensajeRecuperacion.postValue(mensaje)
+            }
+            Log.d("DEBUG", "✅ Estado del mensajeRecuperacion después: ${_mensajeRecuperacion.value}")
 
             if (exito) {
                 val tiempoActual = System.currentTimeMillis()
@@ -80,7 +84,6 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     fun calcularTiempoRestante() {
         val currentTime = System.currentTimeMillis()
         val elapsedTime = currentTime - (_lastRequestTime.value ?: 0)
-
 
         if (elapsedTime < cooldownTime) {
             val tiempoRestante = (cooldownTime - elapsedTime) / 1000
@@ -113,7 +116,6 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     fun actualizarTiempoRestante(nuevoTiempo: Long) {
         _remainingTime.postValue(nuevoTiempo)
     }
-
 
     class Factory(private val repository: AuthRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

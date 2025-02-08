@@ -1,5 +1,6 @@
 package com.adrifdezz.lostandfound.ui.components
 
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -24,8 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.R
 import kotlinx.coroutines.launch
-import androidx.compose.material3.AlertDialog
-import android.util.Log
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: () -> Unit) {
@@ -39,26 +39,33 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     val coroutineScope = rememberCoroutineScope()
     val animatedProgress = remember { Animatable(1f) }
 
+    val remainingTimeState = remember { mutableLongStateOf(remainingTime) }
+    LaunchedEffect(remainingTime) {
+        remainingTimeState.longValue = remainingTime
+    }
+
     LaunchedEffect(Unit) {
         authViewModel.calcularTiempoRestante()
         authViewModel.limpiarMensajeRecuperacion()
         authViewModel.iniciarTemporizadorSiEsNecesario()
     }
 
-    // 🔹 Debug: Imprimir mensaje de recuperación en logs
-    Log.d("DEBUG", "MensajeRecuperacion: $mensajeRecuperacion")
-
-    // 🔹 Mostrar el AlertDialog cuando el mensaje de recuperación se actualiza
     LaunchedEffect(mensajeRecuperacion) {
-        Log.d("DEBUG", "📩 LaunchedEffect detectó mensajeRecuperacion: $mensajeRecuperacion")  // 🔹 Debug
-
+        Log.d("DEBUG_DIALOGO", "mensajeRecuperacion: $mensajeRecuperacion") // Log para depurar
         if (mensajeRecuperacion == "Correo de recuperación enviado") {
-            Log.d("DEBUG", "✅ Se activó el AlertDialog")  // 🔹 Debug
             mostrarDialogo = true
+            Log.d("DEBUG_DIALOGO", "Diálogo activado") // Log cuando se activa el diálogo
+        }
+    }
+
+    LaunchedEffect(mostrarDialogo) {
+        if (!mostrarDialogo) {
+            authViewModel.limpiarMensajeRecuperacion() // Limpia el mensaje después de cerrar el diálogo
         }
     }
 
     LaunchedEffect(remainingTime) {
+        Log.d("DEBUG_REMAINING_TIME", "Composable observando remainingTime: $remainingTime")
         if (remainingTime > 0) {
             animatedProgress.animateTo(
                 targetValue = 0f,
@@ -67,6 +74,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
         } else {
             coroutineScope.launch {
                 animatedProgress.snapTo(1f)
+                Log.d("DEBUG_REMAINING_TIME", "Animación reiniciada, remainingTime llegó a 0")
             }
         }
     }
@@ -156,14 +164,6 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                if (!mensajeRecuperacion.isNullOrEmpty()) {
-                    Text(
-                        text = mensajeRecuperacion ?: "",
-                        color = if (mensajeRecuperacion == "Correo de recuperación enviado") Color.White else errorColor,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -175,29 +175,29 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                 ) {
                     Button(
                         onClick = {
+                            Log.d("DEBUG_REMAINING_TIME", "Botón presionado, correo: $correo")
                             if (correo.isBlank()) {
                                 errorCorreo = true
+                                Log.d("DEBUG_REMAINING_TIME", "Error: El correo está vacío")
                             } else {
                                 authViewModel.recuperarContrasena(correo)
                                 authViewModel.actualizarTiempoRestante(60)
-                                coroutineScope.launch {
-                                    animatedProgress.snapTo(1f)
-                                }
+                                Log.d("DEBUG_REMAINING_TIME", "Correo enviado y temporizador reiniciado")
                             }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .alpha(if (remainingTime > 0) 0.5f else 1f),
+                            .alpha(if (remainingTimeState.longValue > 0) 0.5f else 1f),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
-                            contentColor = if (remainingTime > 0) Color(0xFFB0BEC5) else Color(0xFF263238)
+                            contentColor = if (remainingTimeState.longValue > 0) Color(0xFFB0BEC5) else Color(0xFF263238)
                         ),
-                        enabled = remainingTime == 0L
+                        enabled = remainingTimeState.longValue == 0L
                     ) {
                         Text(
-                            text = if (remainingTime > 0) "Esperando..." else "Enviar correo de recuperación",
+                            text = if (remainingTimeState.longValue > 0) "Esperando..." else "Enviar correo de recuperación",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -230,24 +230,75 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
         }
     }
 
-    // 🔹 AlertDialog para confirmar que el correo se envió con éxito
     if (mostrarDialogo) {
-        Log.d("DEBUG", "🛑 Se está mostrando el AlertDialog")  // 🔹 Debug
-        AlertDialog(
-            onDismissRequest = {
-                Log.d("DEBUG", "❌ Se cerró el AlertDialog")  // 🔹 Debug
-                mostrarDialogo = false
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    Log.d("DEBUG", "✅ Botón OK presionado en AlertDialog")  // 🔹 Debug
-                    mostrarDialogo = false
-                }) {
-                    Text("OK")
-                }
-            },
-            title = { Text("Correo enviado") },
-            text = { Text("📧 Se ha enviado un correo de recuperación con éxito.") }
+        Log.d("DEBUG_DIALOGO", "Mostrando el diálogo correctamente")
+        CustomAlertDialog(
+            title = "Revisa tu bandeja de entrada!",
+            message = "Se ha enviado un correo de recuperación con éxito.",
+            onDismiss = { mostrarDialogo = false }
         )
+    }
+}
+
+@Composable
+fun CustomAlertDialog(
+    title: String,
+    message: String,
+    onDismiss: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.1f)) // Fondo semi-transparente
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color(0xFF263238), Color(0xFF37474F))
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Icono
+            Icon(
+                painter = painterResource(id = R.drawable.ic_success), // Asegúrate de tener un icono
+                contentDescription = null,
+                tint = Color(0xFF4CAF50), // Verde éxito
+                modifier = Modifier.size(48.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Título
+            Text(
+                text = title,
+                color = Color.White,
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Mensaje
+            Text(
+                text = message,
+                color = Color(0xFFB0BEC5),
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            // Botón de confirmación
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF4CAF50),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Aceptar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            }
+        }
     }
 }
