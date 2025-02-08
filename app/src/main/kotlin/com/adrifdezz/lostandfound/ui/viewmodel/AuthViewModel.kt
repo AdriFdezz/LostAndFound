@@ -1,6 +1,5 @@
 package com.adrifdezz.lostandfound.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.google.firebase.auth.FirebaseUser
@@ -25,7 +24,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     val remainingTime: LiveData<Long> get() = _remainingTime
 
     val cooldownTime = 60_000L
-    private var isCooldownRunning = false // 🔹 Control para evitar múltiples temporizadores
+    private var isCooldownRunning = false
 
     fun registrar(correo: String, contrasena: String, nombre: String) {
         authRepository.registrar(correo, contrasena, nombre) { usuario, error ->
@@ -54,25 +53,23 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
 
         authRepository.recuperarContrasena(correo) { exito, mensaje ->
-            Log.d("DEBUG", "🛑 Estado del mensajeRecuperacion antes: ${_mensajeRecuperacion.value}")
             if (exito) {
                 _mensajeRecuperacion.postValue("Correo de recuperación enviado")
             } else {
                 _mensajeRecuperacion.postValue(mensaje)
             }
-            Log.d("DEBUG", "✅ Estado del mensajeRecuperacion después: ${_mensajeRecuperacion.value}")
 
             if (exito) {
                 val tiempoActual = System.currentTimeMillis()
                 _lastRequestTime.postValue(tiempoActual)
                 _remainingTime.value = cooldownTime / 1000
-                iniciarContadorCooldown() // 🔹 Inicia un único temporizador
+                iniciarContadorCooldown()
             }
         }
     }
 
     private fun iniciarContadorCooldown() {
-        if (isCooldownRunning) return // 🔹 Evita múltiples instancias del temporizador
+        if (isCooldownRunning) return
         isCooldownRunning = true
 
         viewModelScope.launch {
@@ -81,7 +78,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 val tiempoRestante = (_remainingTime.value ?: 1) - 1
                 _remainingTime.postValue(if (tiempoRestante >= 0) tiempoRestante else 0)
             }
-            isCooldownRunning = false // 🔹 Marca el temporizador como finalizado
+            isCooldownRunning = false
         }
     }
 
@@ -92,7 +89,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         if (elapsedTime < cooldownTime) {
             val tiempoRestante = (cooldownTime - elapsedTime) / 1000
             _remainingTime.value = tiempoRestante
-            iniciarContadorCooldown() // 🔹 Solo inicia si es necesario
+            iniciarContadorCooldown()
         } else {
             _remainingTime.value = 0L
             _lastRequestTime.value = 0L

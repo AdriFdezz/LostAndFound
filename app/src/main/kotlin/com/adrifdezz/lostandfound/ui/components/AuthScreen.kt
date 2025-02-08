@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -73,7 +74,9 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
         )
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(24.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -167,10 +170,24 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
             }
         }
     }
+
+    if (registroExitoso) {
+        CustomAlertDialogAuth(
+            title = "Registro exitoso",
+            message = "Tu cuenta ha sido creada con éxito. Ahora puedes iniciar sesión.",
+            onDismiss = { registroExitoso = false }
+        )
+    }
 }
 
 @Composable
-fun AuthTextField(value: String, onValueChange: (String) -> Unit, label: String, visualTransformation: VisualTransformation = VisualTransformation.None, trailingIcon: @Composable (() -> Unit)? = null) {
+fun AuthTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    trailingIcon: @Composable (() -> Unit)? = null
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -198,5 +215,64 @@ fun AuthTextField(value: String, onValueChange: (String) -> Unit, label: String,
                 unfocusedIndicatorColor = Color.White
             )
         )
+    }
+}
+
+@Composable
+fun CustomAlertDialogAuth(
+    title: String,
+    message: String,
+    onDismiss: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.1f))
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color(0xFF263238), Color(0xFF37474F))
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_success),
+                contentDescription = null,
+                tint = Color(0xFF4CAF50),
+                modifier = Modifier.size(48.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = title,
+                color = Color.White,
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = message,
+                color = Color(0xFFB0BEC5),
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF4CAF50),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Aceptar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            }
+        }
     }
 }

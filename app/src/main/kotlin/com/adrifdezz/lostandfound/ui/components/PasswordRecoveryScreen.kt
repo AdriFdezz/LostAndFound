@@ -1,6 +1,5 @@
 package com.adrifdezz.lostandfound.ui.components
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: () -> Unit) {
     var correo by remember { mutableStateOf("") }
     var errorCorreo by remember { mutableStateOf(false) }
-    var mostrarDialogo by remember { mutableStateOf(false) }  // 🔹 Estado para mostrar el diálogo
+    var mostrarDialogo by remember { mutableStateOf(false) }
 
     val mensajeRecuperacion by authViewModel.mensajeRecuperacion.observeAsState()
     val remainingTime by authViewModel.remainingTime.observeAsState(0L)
@@ -42,27 +41,22 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     }
 
     LaunchedEffect(mensajeRecuperacion) {
-        Log.d("DEBUG_DIALOGO", "mensajeRecuperacion: $mensajeRecuperacion") // Log para depurar
         if (mensajeRecuperacion == "Correo de recuperación enviado") {
             mostrarDialogo = true
-            Log.d("DEBUG_DIALOGO", "Diálogo activado") // Log cuando se activa el diálogo
         }
     }
 
     LaunchedEffect(mostrarDialogo) {
         if (!mostrarDialogo) {
-            authViewModel.limpiarMensajeRecuperacion() // Limpia el mensaje después de cerrar el diálogo
+            authViewModel.limpiarMensajeRecuperacion()
         }
     }
 
     LaunchedEffect(key1 = remainingTime) {
-        Log.d("DEBUG_REMAINING_TIME", "Composable observando remainingTime: $remainingTime")
-        val cooldownDuration = authViewModel.cooldownTime / 1000f // Tiempo total en segundos
+        val cooldownDuration = authViewModel.cooldownTime / 1000f
 
-        // Calcula el progreso inicial en función del tiempo restante
         val currentProgress = remainingTime.toFloat() / cooldownDuration
 
-        // Sincroniza el progreso actual solo si es necesario
         if (animatedProgress.value != currentProgress) {
             animatedProgress.snapTo(currentProgress)
         }
@@ -163,14 +157,11 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                 ) {
                     Button(
                         onClick = {
-                            Log.d("DEBUG_REMAINING_TIME", "Botón presionado, correo: $correo")
                             if (correo.isBlank()) {
                                 errorCorreo = true
-                                Log.d("DEBUG_REMAINING_TIME", "Error: El correo está vacío")
                             } else {
                                 authViewModel.recuperarContrasena(correo)
                                 authViewModel.actualizarTiempoRestante(60)
-                                Log.d("DEBUG_REMAINING_TIME", "Correo enviado y temporizador reiniciado")
                             }
                         },
                         modifier = Modifier
@@ -219,8 +210,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     }
 
     if (mostrarDialogo) {
-        Log.d("DEBUG_DIALOGO", "Mostrando el diálogo correctamente")
-        CustomAlertDialog(
+        CustomAlertDialogRecovery(
             title = "Revisa tu bandeja de entrada!",
             message = "Se ha enviado un correo de recuperación con éxito.",
             onDismiss = { mostrarDialogo = false }
@@ -229,7 +219,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
 }
 
 @Composable
-fun CustomAlertDialog(
+fun CustomAlertDialogRecovery(
     title: String,
     message: String,
     onDismiss: () -> Unit
@@ -237,7 +227,7 @@ fun CustomAlertDialog(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.1f)) // Fondo semi-transparente
+            .background(Color.Black.copy(alpha = 0.1f))
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -252,7 +242,6 @@ fun CustomAlertDialog(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Icono
             Icon(
                 painter = painterResource(id = R.drawable.ic_success), // Asegúrate de tener un icono
                 contentDescription = null,
@@ -260,14 +249,12 @@ fun CustomAlertDialog(
                 modifier = Modifier.size(48.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            // Título
             Text(
                 text = title,
                 color = Color.White,
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            // Mensaje
             Text(
                 text = message,
                 color = Color(0xFFB0BEC5),
@@ -275,7 +262,6 @@ fun CustomAlertDialog(
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(24.dp))
-            // Botón de confirmación
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(
