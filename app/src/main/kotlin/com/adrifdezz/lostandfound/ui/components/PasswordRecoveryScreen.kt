@@ -2,8 +2,6 @@ package com.adrifdezz.lostandfound.ui.components
 
 import android.util.Log
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.R
-import kotlinx.coroutines.launch
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
@@ -36,13 +33,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     val mensajeRecuperacion by authViewModel.mensajeRecuperacion.observeAsState()
     val remainingTime by authViewModel.remainingTime.observeAsState(0L)
 
-    val coroutineScope = rememberCoroutineScope()
     val animatedProgress = remember { Animatable(1f) }
-
-    val remainingTimeState = remember { mutableLongStateOf(remainingTime) }
-    LaunchedEffect(remainingTime) {
-        remainingTimeState.longValue = remainingTime
-    }
 
     LaunchedEffect(Unit) {
         authViewModel.calcularTiempoRestante()
@@ -64,18 +55,16 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
         }
     }
 
-    LaunchedEffect(remainingTime) {
+    LaunchedEffect(key1 = remainingTime) {
         Log.d("DEBUG_REMAINING_TIME", "Composable observando remainingTime: $remainingTime")
-        if (remainingTime > 0) {
-            animatedProgress.animateTo(
-                targetValue = 0f,
-                animationSpec = tween(durationMillis = (remainingTime * 1000).toInt(), easing = LinearEasing)
-            )
-        } else {
-            coroutineScope.launch {
-                animatedProgress.snapTo(1f)
-                Log.d("DEBUG_REMAINING_TIME", "Animación reiniciada, remainingTime llegó a 0")
-            }
+        val cooldownDuration = authViewModel.cooldownTime / 1000f // Tiempo total en segundos
+
+        // Calcula el progreso inicial en función del tiempo restante
+        val currentProgress = remainingTime.toFloat() / cooldownDuration
+
+        // Sincroniza el progreso actual solo si es necesario
+        if (animatedProgress.value != currentProgress) {
+            animatedProgress.snapTo(currentProgress)
         }
     }
 
@@ -164,7 +153,6 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Box(
@@ -188,16 +176,16 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .alpha(if (remainingTimeState.longValue > 0) 0.5f else 1f),
+                            .alpha(if (remainingTime > 0) 0.5f else 1f),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
-                            contentColor = if (remainingTimeState.longValue > 0) Color(0xFFB0BEC5) else Color(0xFF263238)
+                            contentColor = if (remainingTime > 0) Color(0xFFB0BEC5) else Color(0xFF263238)
                         ),
-                        enabled = remainingTimeState.longValue == 0L
+                        enabled = remainingTime == 0L
                     ) {
                         Text(
-                            text = if (remainingTimeState.longValue > 0) "Esperando..." else "Enviar correo de recuperación",
+                            text = if (remainingTime > 0) "Esperando..." else "Enviar correo de recuperación",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -211,7 +199,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                                 .height(6.dp)
                                 .align(Alignment.BottomCenter),
                             color = Color.White.copy(alpha = 0.8f),
-                            trackColor = Color.Transparent
+                            trackColor = Color.Transparent,
                         )
                     }
                 }

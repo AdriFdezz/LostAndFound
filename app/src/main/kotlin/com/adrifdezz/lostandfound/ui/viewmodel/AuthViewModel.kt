@@ -24,7 +24,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _remainingTime = MutableLiveData(0L)
     val remainingTime: LiveData<Long> get() = _remainingTime
 
-    private val cooldownTime = 60_000L
+    val cooldownTime = 60_000L
+    private var isCooldownRunning = false // 🔹 Control para evitar múltiples temporizadores
 
     fun registrar(correo: String, contrasena: String, nombre: String) {
         authRepository.registrar(correo, contrasena, nombre) { usuario, error ->
@@ -65,19 +66,22 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 val tiempoActual = System.currentTimeMillis()
                 _lastRequestTime.postValue(tiempoActual)
                 _remainingTime.value = cooldownTime / 1000
-                println("✅ Correo enviado. Iniciando cooldown: ${_remainingTime.value}")
-                iniciarContadorCooldown()
+                iniciarContadorCooldown() // 🔹 Inicia un único temporizador
             }
         }
     }
 
     private fun iniciarContadorCooldown() {
+        if (isCooldownRunning) return // 🔹 Evita múltiples instancias del temporizador
+        isCooldownRunning = true
+
         viewModelScope.launch {
             while ((_remainingTime.value ?: 0) > 0) {
                 delay(1000L)
                 val tiempoRestante = (_remainingTime.value ?: 1) - 1
                 _remainingTime.postValue(if (tiempoRestante >= 0) tiempoRestante else 0)
             }
+            isCooldownRunning = false // 🔹 Marca el temporizador como finalizado
         }
     }
 
@@ -88,7 +92,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         if (elapsedTime < cooldownTime) {
             val tiempoRestante = (cooldownTime - elapsedTime) / 1000
             _remainingTime.value = tiempoRestante
-            iniciarContadorCooldown()
+            iniciarContadorCooldown() // 🔹 Solo inicia si es necesario
         } else {
             _remainingTime.value = 0L
             _lastRequestTime.value = 0L
@@ -96,16 +100,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     }
 
     fun iniciarTemporizadorSiEsNecesario() {
-        if ((_remainingTime.value ?: 0) > 0) {
-            return
-        }
-
-        viewModelScope.launch {
-            while ((_remainingTime.value ?: 0) > 0) {
-                delay(1000L)
-                val nuevoTiempo = (_remainingTime.value ?: 1) - 1
-                _remainingTime.postValue(if (nuevoTiempo >= 0) nuevoTiempo else 0)
-            }
+        if ((_remainingTime.value ?: 0) > 0 && !isCooldownRunning) {
+            iniciarContadorCooldown()
         }
     }
 
