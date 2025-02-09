@@ -29,12 +29,10 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     var errorCorreo by remember { mutableStateOf(false) }
     var mensajeError by remember { mutableStateOf("") }
     var mostrarDialogo by remember { mutableStateOf(false) }
+    val animatedProgress = remember { Animatable(1f) }
 
     val mensajeRecuperacion by authViewModel.mensajeRecuperacion.observeAsState()
     val remainingTime by authViewModel.remainingTime.observeAsState(0L)
-
-    val coroutineScope = rememberCoroutineScope()
-    val animatedProgress = remember { Animatable(1f) }
 
     val remainingTimeState = remember { mutableLongStateOf(remainingTime) }
     LaunchedEffect(remainingTime) {
@@ -54,7 +52,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     }
 
     LaunchedEffect(key1 = remainingTime) {
-        val cooldownDuration = authViewModel.cooldownTime / 1000f
+        val cooldownDuration = authViewModel.cooldownTime / 1000f // Tiempo total en segundos
         val currentProgress = remainingTime.toFloat() / cooldownDuration
 
         animatedProgress.snapTo(currentProgress)
@@ -220,7 +218,10 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
         CustomAlertDialogRecovery(
             title = "Revisa tu bandeja de entrada!",
             message = "Se ha enviado un correo de recuperación con éxito.",
-            onDismiss = { mostrarDialogo = false }
+            onDismiss = {
+                mostrarDialogo = false
+                authViewModel.limpiarMensajeRecuperacion()
+            }
         )
     }
 }
