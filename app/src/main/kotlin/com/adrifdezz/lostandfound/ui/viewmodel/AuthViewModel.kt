@@ -1,9 +1,13 @@
 package com.adrifdezz.lostandfound.ui.viewmodel
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.*
 import com.adrifdezz.lostandfound.data.AuthRepository
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -130,6 +134,66 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     fun actualizarTiempoRestante(nuevoTiempo: Long) {
         _remainingTime.postValue(nuevoTiempo)
+    }
+
+    fun publicarMascotaPerdida(
+        nombre: String,
+        edad: String,
+        raza: String,
+        localidad: String,
+        ultimaUbicacion: String,
+        descripcion: String,
+        fotoUri: Uri,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        val usuario = FirebaseAuth.getInstance().currentUser
+        if (usuario == null) {
+            Log.e("AuthViewModel", "❌ El usuario no está autenticado.")
+            callback(false, "El usuario no está autenticado.")
+            return
+        }
+
+        val userId = usuario.uid
+        Log.d("AuthViewModel", "✅ Usuario autenticado con UID: $userId")
+
+        val storageRef = FirebaseStorage.getInstance()
+            .reference.child("fotos_mascotas/$userId/imagen_${System.currentTimeMillis()}.jpg")
+
+        storageRef.putFile(fotoUri)
+            .addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    val mascotaData = hashMapOf(
+                        "nombre" to nombre,
+                        "edad" to edad,
+                        "raza" to raza,
+                        "localidad" to localidad,
+                        "ultimaUbicacion" to ultimaUbicacion,
+                        "descripcion" to descripcion,
+                        "fotoUrl" to downloadUrl.toString(),
+                        "usuarioId" to userId,
+                        "timestamp" to System.currentTimeMillis()
+                    )
+
+                    FirebaseFirestore.getInstance()
+                        .collection("mascotas_perdidas")
+                        .add(mascotaData)
+                        .addOnSuccessListener {
+                            Log.d("AuthViewModel", "✅ Datos guardados exitosamente en Firestore.")
+                            callback(true, null)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("AuthViewModel", "❌ Error al guardar datos en Firestore: ${e.message}")
+                            callback(false, "Error al guardar datos en Firestore: ${e.message}")
+                        }
+                }.addOnFailureListener { e ->
+                    Log.e("AuthViewModel", "❌ Error al obtener la URL de la imagen: ${e.message}")
+                    callback(false, "Error al obtener la URL de la imagen: ${e.message}")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("AuthViewModel", "❌ Error al subir la imagen: ${e.message}")
+                callback(false, "Error al subir la imagen: ${e.message}")
+            }
     }
 
     class Factory(private val repository: AuthRepository) : ViewModelProvider.Factory {

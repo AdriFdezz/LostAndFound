@@ -70,8 +70,9 @@ class AuthRepository {
                 }
             }
     }
+}
 
-    private fun traducirErrorFirebase(errorFirebase: String?): String {
+private fun traducirErrorFirebase(errorFirebase: String?): String {
         return when (errorFirebase) {
             "The email address is badly formatted." -> "La dirección de correo electrónico tiene un formato incorrecto."
             "There is no user record corresponding to this identifier. The user may have been deleted." -> "No hay un registro de usuario correspondiente a este identificador. El usuario puede haber sido eliminado."
@@ -81,4 +82,3 @@ class AuthRepository {
             else -> "Credenciales incorrectas. Vuelve a intentarlo."
         }
     }
-}
