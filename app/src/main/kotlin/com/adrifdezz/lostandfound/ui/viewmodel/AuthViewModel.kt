@@ -162,6 +162,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         storageRef.putFile(fotoUri)
             .addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    Log.d("AuthViewModel", "URL de la imagen: $downloadUrl")
                     val mascotaData = hashMapOf(
                         "nombre" to nombre,
                         "edad" to edad,
@@ -174,11 +175,16 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                         "timestamp" to System.currentTimeMillis()
                     )
 
-                    FirebaseFirestore.getInstance()
-                        .collection("mascotas_perdidas")
-                        .add(mascotaData)
+                    val firestore = FirebaseFirestore.getInstance()
+                    val documentReference = firestore.collection("mascotas_perdidas").document()
+                    val documentId = documentReference.id
+
+                    // Agregar el ID al mapa de datos
+                    mascotaData["id"] = documentId
+
+                    documentReference.set(mascotaData)
                         .addOnSuccessListener {
-                            Log.d("AuthViewModel", "✅ Datos guardados exitosamente en Firestore.")
+                            Log.d("AuthViewModel", "✅ Datos guardados exitosamente en Firestore con ID: $documentId.")
                             callback(true, null)
                         }
                         .addOnFailureListener { e ->

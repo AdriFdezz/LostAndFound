@@ -1,5 +1,7 @@
 package com.adrifdezz.lostandfound.ui.components
 
+import android.util.Log
+import android.widget.ImageView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,9 +11,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.adrifdezz.lostandfound.R
 import com.adrifdezz.lostandfound.data.PostData
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.tasks.await
@@ -20,7 +24,7 @@ import kotlinx.coroutines.tasks.await
 @Composable
 fun PostDetailsScreen(postId: String, navController: NavController) {
     var post by remember { mutableStateOf<PostData?>(null) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(postId) {
         try {
@@ -31,12 +35,14 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                 .await()
 
             if (document.exists()) {
-                post = document.toObject(PostData::class.java)
+                val data = document.toObject(PostData::class.java)
+                post = data
+                Log.d("PostDetailsScreen", "URL de la imagen cargada: ${data?.fotoUrl}")
             } else {
-                errorMessage = "El post no existe."
+                Log.e("PostDetailsScreen", "El post con ID $postId no existe.")
             }
         } catch (e: Exception) {
-            errorMessage = "Error al cargar los detalles del post: ${e.localizedMessage}"
+            Log.e("PostDetailsScreen", "Error al cargar detalles del post: ${e.localizedMessage}")
         }
     }
 
@@ -87,7 +93,7 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 GlideImage(
-                    imageModel = data.imageUrl,
+                    imageModel = data.fotoUrl,
                     contentDescription = "Imagen de ${data.nombre}",
                     modifier = Modifier
                         .fillMaxWidth()

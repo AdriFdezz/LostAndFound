@@ -28,7 +28,10 @@ fun WelcomeScreen(navController: NavController) {
                 posts.clear()
                 for (document in result) {
                     val post = document.toObject(PostData::class.java)
-                    posts.add(post)
+                    post.let {
+                        it.id = document.id // Asigna el ID del documento al objeto PostData
+                        posts.add(it)
+                    }
                 }
                 isLoading = false
             }
@@ -97,7 +100,7 @@ fun PostCard(post: PostData, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             GlideImage(
-                imageModel = post.imageUrl,
+                imageModel = post.fotoUrl,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()

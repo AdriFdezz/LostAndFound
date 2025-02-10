@@ -1,12 +1,12 @@
 package com.adrifdezz.lostandfound.data
 
 data class PostData(
-    val id: String = "",
+    var id: String = "",
     val nombre: String = "",
     val edad: String = "",
     val raza: String = "",
     val localidad: String = "",
     val ultimaUbicacion: String = "",
     val descripcion: String = "",
-    val imageUrl: String = ""
+    val fotoUrl: String = ""
 )
