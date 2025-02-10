@@ -92,7 +92,7 @@ fun PostCard(post: PostData, navController: NavController) {
     Card(
         modifier = Modifier
             .width(200.dp)
-            .height(250.dp)
+            .height(270.dp) // Ajuste en altura para mostrar "Día Perdido"
             .clickable { navController.navigate("post_details_screen/${post.id}") },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -110,6 +110,7 @@ fun PostCard(post: PostData, navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = post.nombre, style = MaterialTheme.typography.bodyLarge)
             Text(text = post.localidad, style = MaterialTheme.typography.bodySmall)
+            Text(text = "Día Perdido: ${post.diaPerdido}", style = MaterialTheme.typography.bodySmall) // Nuevo campo
         }
     }
 }

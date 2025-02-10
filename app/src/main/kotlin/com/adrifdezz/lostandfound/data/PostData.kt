@@ -8,5 +8,6 @@ data class PostData(
     val localidad: String = "",
     val ultimaUbicacion: String = "",
     val descripcion: String = "",
-    val fotoUrl: String = ""
+    val fotoUrl: String = "",
+    val diaPerdido: String = ""
 )

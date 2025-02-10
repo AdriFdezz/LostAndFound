@@ -143,6 +143,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         localidad: String,
         ultimaUbicacion: String,
         descripcion: String,
+        diaPerdido: String, // Nuevo parámetro para la fecha seleccionada
         fotoUri: Uri,
         callback: (Boolean, String?) -> Unit
     ) {
@@ -170,6 +171,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                         "localidad" to localidad,
                         "ultimaUbicacion" to ultimaUbicacion,
                         "descripcion" to descripcion,
+                        "diaPerdido" to diaPerdido, // Guardar la fecha seleccionada
                         "fotoUrl" to downloadUrl.toString(),
                         "usuarioId" to userId,
                         "timestamp" to System.currentTimeMillis()
@@ -179,7 +181,6 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                     val documentReference = firestore.collection("mascotas_perdidas").document()
                     val documentId = documentReference.id
 
-                    // Agregar el ID al mapa de datos
                     mascotaData["id"] = documentId
 
                     documentReference.set(mascotaData)

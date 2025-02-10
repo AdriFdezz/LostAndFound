@@ -1,7 +1,6 @@
 package com.adrifdezz.lostandfound.ui.components
 
 import android.util.Log
-import android.widget.ImageView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,11 +10,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.adrifdezz.lostandfound.R
 import com.adrifdezz.lostandfound.data.PostData
-import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.tasks.await
@@ -108,6 +105,7 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                 Text(text = "Raza: ${data.raza}", style = MaterialTheme.typography.bodyLarge)
                 Text(text = "Localidad: ${data.localidad}", style = MaterialTheme.typography.bodyLarge)
                 Text(text = "Última Ubicación: ${data.ultimaUbicacion}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Día Perdido: ${data.diaPerdido}", style = MaterialTheme.typography.bodyLarge) // Nuevo campo agregado
                 Text(text = "Descripción: ${data.descripcion}", style = MaterialTheme.typography.bodyLarge)
             }
         }
