@@ -13,7 +13,10 @@ import com.adrifdezz.lostandfound.ui.components.AuthScreen
 import com.adrifdezz.lostandfound.ui.components.PasswordRecoveryScreen
 import com.adrifdezz.lostandfound.ui.components.WelcomeScreen
 import com.adrifdezz.lostandfound.ui.components.AddPostScreen
+import com.adrifdezz.lostandfound.ui.components.EditPostScreen
+import com.adrifdezz.lostandfound.ui.components.GestionPublicacionScreen
 import com.adrifdezz.lostandfound.ui.components.PostDetailsScreen
+import com.adrifdezz.lostandfound.ui.components.TusPublicacionesScreen
 
 class AuthActivity : ComponentActivity() {
 
@@ -28,7 +31,6 @@ class AuthActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            // Define la pantalla inicial basándote en el estado del usuario autenticado
             val startDestination = if (authViewModel.usuario.value != null) "welcome_screen" else "auth_screen"
 
             NavHost(navController = navController, startDestination = startDestination) {
@@ -53,9 +55,26 @@ class AuthActivity : ComponentActivity() {
                     val postId = backStackEntry.arguments?.getString("postId") ?: ""
                     PostDetailsScreen(postId = postId, navController = navController)
                 }
+
+                composable("tus_publicaciones_screen") {
+                    TusPublicacionesScreen(navController = navController)
+                }
+                composable(
+                    route = "gestion_publicacion_screen/{postId}",
+                    arguments = listOf(navArgument("postId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val postId = backStackEntry.arguments?.getString("postId") ?: return@composable
+                    GestionPublicacionScreen(postId, navController)
+                }
+                composable(
+                    route = "edit_post_screen/{postId}",
+                    arguments = listOf(navArgument("postId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val postId = backStackEntry.arguments?.getString("postId") ?: return@composable
+                    EditPostScreen(postId, navController)
+                }
             }
 
-            // Observa los cambios en `esInicioSesionExitoso` para redirigir al usuario
             authViewModel.esInicioSesionExitoso.observe(this) { esExitoso ->
                 if (esExitoso) {
                     navController.navigate("welcome_screen") {
@@ -64,10 +83,8 @@ class AuthActivity : ComponentActivity() {
                 }
             }
 
-            // Observa los cambios en el usuario para garantizar la navegación adecuada
             authViewModel.usuario.observe(this) { user ->
                 if (user == null && navController.currentDestination?.route != "auth_screen") {
-                    // Si el usuario no está autenticado, redirige a la pantalla de autenticación
                     navController.navigate("auth_screen") {
                         popUpTo("welcome_screen") { inclusive = true }
                     }

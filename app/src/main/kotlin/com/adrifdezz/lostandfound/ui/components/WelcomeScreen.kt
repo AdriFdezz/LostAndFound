@@ -79,7 +79,7 @@ fun WelcomeScreen(navController: NavController) {
                             text = { Text("Tus Publicaciones") },
                             onClick = {
                                 expandedMenu = false
-                                navController.navigate("your_posts_screen") // Navega a la pantalla de publicaciones del usuario
+                                navController.navigate("tus_publicaciones_screen") // Navega a la pantalla de publicaciones del usuario
                             }
                         )
                         DropdownMenuItem(
@@ -167,12 +167,18 @@ fun WelcomeScreen(navController: NavController) {
 }
 
 @Composable
-fun PostCard(post: PostData, navController: NavController) {
+fun PostCard(post: PostData, navController: NavController, isUserPost: Boolean = false) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { navController.navigate("post_details_screen/${post.id}") },
+            .clickable {
+                if (isUserPost) {
+                    navController.navigate("gestion_publicacion_screen/${post.id}")
+                } else {
+                    navController.navigate("post_details_screen/${post.id}")
+                }
+            },
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.2f)),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp)
