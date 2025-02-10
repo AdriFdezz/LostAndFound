@@ -52,7 +52,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     }
 
     LaunchedEffect(key1 = remainingTime) {
-        val cooldownDuration = authViewModel.cooldownTime / 1000f // Tiempo total en segundos
+        val cooldownDuration = authViewModel.cooldownTime / 1000f
         val currentProgress = remainingTime.toFloat() / cooldownDuration
 
         animatedProgress.snapTo(currentProgress)

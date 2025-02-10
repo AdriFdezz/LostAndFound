@@ -54,9 +54,9 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
 
     LaunchedEffect(usuarioRegistrado) {
         usuarioRegistrado?.let {
+            registroExitoso = esModoRegistro
             esModoRegistro = false
             mensajeError = ""
-            registroExitoso = true
         }
     }
 
