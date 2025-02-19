@@ -127,9 +127,9 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                 val data = post!!
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .verticalScroll(rememberScrollState())
-                        .padding(16.dp),
+                        .padding(horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     GlideImage(
@@ -147,49 +147,63 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                     Text(
                         text = "Nombre: ${data.nombre}",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
                         text = "Edad: ${data.edad}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
                         text = "Raza: ${data.raza}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
                         text = "Localidad: ${data.localidad}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = "Última Ubicación: ${data.ultimaUbicacion}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        text = "Última Ubicación:\n${data.ultimaUbicacion}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
                         text = "Día Perdido: ${data.diaPerdido}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = "Descripción: ${data.descripcion}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
+                        text = "Descripción:\n${data.descripcion}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     if (data.usuarioId != userId) {

@@ -2,35 +2,12 @@ package com.adrifdezz.lostandfound.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -38,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.adrifdezz.lostandfound.R
@@ -118,7 +96,6 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Imagen principal
                         GlideImage(
                             imageModel = data.fotoUrl,
                             contentScale = ContentScale.Crop,
@@ -130,46 +107,84 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Información de la publicación
-                        Text(
-                            text = "Nombre: ${data.nombre}",
-                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Edad: ${data.edad}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Raza: ${data.raza}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Localidad: ${data.localidad}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Fecha de pérdida: ${data.diaPerdido}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Última ubicación: ${data.ultimaUbicacion}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Descripción: ${data.descripcion.ifBlank { "Sin descripción" }}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White
-                        )
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Nombre: ${data.nombre}",
+                                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Edad: ${data.edad}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
 
-                        // Botón para editar publicación
+                            Text(
+                                text = "Raza: ${data.raza}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Text(
+                                text = "Localidad: ${data.localidad}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Text(
+                                text = "Fecha de pérdida: ${data.diaPerdido}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Text(
+                                text = "Última ubicación:",
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Text(
+                                text = data.ultimaUbicacion,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Text(
+                                text = "Descripción:",
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Text(
+                                text = data.descripcion.ifBlank { "Sin descripción" },
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
                         Button(
                             onClick = { navController.navigate("edit_post_screen/$postId") },
                             modifier = Modifier.fillMaxWidth(),
@@ -179,7 +194,6 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
                             Text("Editar Publicación", color = Color.White, fontWeight = FontWeight.Bold)
                         }
 
-                        // Botón para cerrar publicación
                         Button(
                             onClick = {
                                 FirebaseFirestore.getInstance()

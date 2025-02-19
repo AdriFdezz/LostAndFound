@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -125,14 +126,16 @@ fun TusPublicacionesScreen(navController: NavController) {
                         text = errorMessage,
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 } else if (posts.isEmpty()) {
                     Text(
                         text = "No tienes publicaciones.",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 } else {
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -158,21 +161,35 @@ fun TusPublicacionesScreen(navController: NavController) {
                                         contentDescription = "Imagen de ${post.nombre}"
                                     )
                                     Spacer(modifier = Modifier.width(16.dp))
-                                    Column {
+
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
                                         Text(
                                             text = "Nombre: ${post.nombre}",
                                             style = MaterialTheme.typography.bodyLarge,
-                                            color = Color.White
+                                            color = Color.White,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth()
                                         )
+                                        Spacer(modifier = Modifier.height(4.dp))
+
                                         Text(
                                             text = "Localidad: ${post.localidad}",
                                             style = MaterialTheme.typography.bodyMedium,
-                                            color = Color.White
+                                            color = Color.White,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth()
                                         )
+                                        Spacer(modifier = Modifier.height(4.dp))
+
                                         Text(
                                             text = "Fecha de pérdida: ${post.diaPerdido}",
                                             style = MaterialTheme.typography.bodySmall,
-                                            color = Color.White
+                                            color = Color.White,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth()
                                         )
                                     }
                                 }
