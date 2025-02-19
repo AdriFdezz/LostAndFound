@@ -9,5 +9,6 @@ data class PostData(
     val ultimaUbicacion: String = "",
     val descripcion: String = "",
     val fotoUrl: String = "",
-    val diaPerdido: String = ""
+    val diaPerdido: String = "",
+    val usuarioId: String = ""
 )
