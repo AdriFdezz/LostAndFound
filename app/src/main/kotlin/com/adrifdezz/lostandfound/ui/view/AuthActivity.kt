@@ -10,11 +10,25 @@ import androidx.navigation.navArgument
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.ui.components.*
+import android.Manifest
+import android.os.Build
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 
 class AuthActivity : ComponentActivity() {
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (!isGranted) {
+                Log.e("AuthActivity", "El usuario denegó el permiso de notificaciones.")
+            }
+        }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
 
         val factory = AuthViewModel.Factory(AuthRepository())
         val authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
