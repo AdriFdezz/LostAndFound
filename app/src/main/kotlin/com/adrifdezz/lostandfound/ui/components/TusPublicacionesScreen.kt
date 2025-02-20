@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -157,9 +158,11 @@ fun TusPublicacionesScreen(navController: NavController) {
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier
                                             .size(100.dp)
-                                            .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
+                                            .clip(RoundedCornerShape(8.dp))
+                                            .background(Color.White.copy(alpha = 0.2f)),
                                         contentDescription = "Imagen de ${post.nombre}"
                                     )
+
                                     Spacer(modifier = Modifier.width(16.dp))
 
                                     Column(

@@ -96,14 +96,16 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        GlideImage(
-                            imageModel = data.fotoUrl,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(200.dp)
-                                .background(Color.Gray.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
-                            contentDescription = "Imagen de la publicación"
-                        )
+                        post?.let { safePost ->
+                            GlideImage(
+                                imageModel = safePost.fotoUrl,
+                                contentDescription = "Imagen de ${safePost.nombre}",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(250.dp),
+                                contentScale = ContentScale.Fit
+                            )
+                        }
 
                         Spacer(modifier = Modifier.height(16.dp))
 

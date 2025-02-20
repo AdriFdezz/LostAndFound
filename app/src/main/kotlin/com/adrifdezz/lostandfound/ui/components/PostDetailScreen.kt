@@ -132,15 +132,16 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                         .padding(horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    GlideImage(
-                        imageModel = data.fotoUrl,
-                        contentDescription = "Imagen de ${data.nombre}",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp)
-                            .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(12.dp)),
-                        contentScale = ContentScale.Crop
-                    )
+                    post?.let { safePost ->
+                        GlideImage(
+                            imageModel = safePost.fotoUrl,
+                            contentDescription = "Imagen de ${safePost.nombre}",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
