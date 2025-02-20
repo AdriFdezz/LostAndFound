@@ -9,27 +9,20 @@ import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
-import com.adrifdezz.lostandfound.ui.components.AuthScreen
-import com.adrifdezz.lostandfound.ui.components.PasswordRecoveryScreen
-import com.adrifdezz.lostandfound.ui.components.WelcomeScreen
-import com.adrifdezz.lostandfound.ui.components.AddPostScreen
-import com.adrifdezz.lostandfound.ui.components.EditPostScreen
-import com.adrifdezz.lostandfound.ui.components.GestionPublicacionScreen
-import com.adrifdezz.lostandfound.ui.components.PostDetailsScreen
-import com.adrifdezz.lostandfound.ui.components.TusPublicacionesScreen
+import com.adrifdezz.lostandfound.ui.components.*
 
 class AuthActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val authViewModel = ViewModelProvider(
-            this,
-            AuthViewModel.Factory(AuthRepository())
-        )[AuthViewModel::class.java]
+        val factory = AuthViewModel.Factory(AuthRepository())
+        val authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         setContent {
             val navController = rememberNavController()
+
+            authViewModel.verificarSesionActiva()
 
             val startDestination = if (authViewModel.usuario.value != null) "welcome_screen" else "auth_screen"
 
@@ -84,7 +77,7 @@ class AuthActivity : ComponentActivity() {
             }
 
             authViewModel.usuario.observe(this) { user ->
-                if (user == null && navController.currentDestination?.route != "auth_screen") {
+                if (user == null && authViewModel.sesionCerradaManualmente) {
                     navController.navigate("auth_screen") {
                         popUpTo("welcome_screen") { inclusive = true }
                     }

@@ -16,6 +16,10 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _usuario = MutableLiveData<FirebaseUser?>()
     val usuario: LiveData<FirebaseUser?> get() = _usuario
 
+    init {
+        _usuario.value = FirebaseAuth.getInstance().currentUser
+    }
+
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
@@ -23,6 +27,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     val mensajeRecuperacion: LiveData<String?> get() = _mensajeRecuperacion
 
     val esInicioSesionExitoso = MutableLiveData(false)
+
+    var sesionCerradaManualmente = false
 
     private val _lastRequestTime = MutableLiveData(0L)
     private val _remainingTime = MutableLiveData(0L)
@@ -201,6 +207,17 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 Log.e("AuthViewModel", "❌ Error al subir la imagen: ${e.message}")
                 callback(false, "Error al subir la imagen: ${e.message}")
             }
+    }
+
+    fun verificarSesionActiva() {
+        val usuarioActual = FirebaseAuth.getInstance().currentUser
+        _usuario.postValue(usuarioActual)
+    }
+
+    fun cerrarSesion() {
+        sesionCerradaManualmente = true
+        authRepository.cerrarSesion()
+        _usuario.postValue(null)
     }
 
     class Factory(private val repository: AuthRepository) : ViewModelProvider.Factory {

@@ -19,10 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.adrifdezz.lostandfound.R
+import com.adrifdezz.lostandfound.data.AuthRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.adrifdezz.lostandfound.data.PostData
+import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +34,8 @@ fun WelcomeScreen(navController: NavController) {
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
     var expandedMenu by remember { mutableStateOf(false) }
+
+    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(AuthRepository()))
 
     LaunchedEffect(Unit) {
         FirebaseFirestore.getInstance()
@@ -86,7 +91,10 @@ fun WelcomeScreen(navController: NavController) {
                             text = { Text("Cerrar Sesión") },
                             onClick = {
                                 expandedMenu = false
-                                navController.navigate("auth_screen") // Cambiado a `auth_screen` para redirigir a la pantalla AuthScreen
+                                authViewModel.cerrarSesion()
+                                navController.navigate("auth_screen") {
+                                    popUpTo("welcome_screen") { inclusive = true }
+                                }
                             }
                         )
                     }

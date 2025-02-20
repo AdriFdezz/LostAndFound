@@ -59,6 +59,10 @@ class AuthRepository {
             }
     }
 
+    fun cerrarSesion() {
+        FirebaseAuth.getInstance().signOut()
+    }
+
     fun recuperarContrasena(correo: String, callback: (Boolean, String?) -> Unit) {
         autenticacionFirebase.sendPasswordResetEmail(correo)
             .addOnCompleteListener { tarea ->
