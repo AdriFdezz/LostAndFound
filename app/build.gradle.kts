@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.messaging.ktx)
 
 
     // Otros servicios de Firebase que puedas necesitar
