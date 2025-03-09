@@ -52,6 +52,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.skydoves.landscapist.glide.GlideImage
 
+/**
+ * Pantalla que muestra las publicaciones del usuario autenticado sobre mascotas perdidas.
+ *
+ * Permite al usuario visualizar una lista de sus publicaciones y acceder a la pantalla de gestión
+ * de cada una de ellas.
+ *
+ * @param navController Controlador de navegación para gestionar la navegación entre pantallas.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TusPublicacionesScreen(navController: NavController) {
@@ -61,6 +69,9 @@ fun TusPublicacionesScreen(navController: NavController) {
 
     val userId = FirebaseAuth.getInstance().currentUser?.uid
 
+    /**
+     * Efecto lanzado al cargar la pantalla para obtener las publicaciones del usuario desde Firestore.
+     */
     LaunchedEffect(userId) {
         if (userId != null) {
             FirebaseFirestore.getInstance()
@@ -88,6 +99,9 @@ fun TusPublicacionesScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
+            /**
+             * Barra superior con título y botón de regreso.
+             */
             TopAppBar(
                 title = {
                     Text(
@@ -155,9 +169,16 @@ fun TusPublicacionesScreen(navController: NavController) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
+                    /**
+                     * Muestra la lista de publicaciones del usuario.
+                     */
                 } else {
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         posts.forEach { post ->
+                            /**
+                             * Tarjeta que representa una publicación del usuario.
+                             * Al hacer clic, se navega a la pantalla de gestión de la publicación.
+                             */
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -170,6 +191,9 @@ fun TusPublicacionesScreen(navController: NavController) {
                                     modifier = Modifier.padding(16.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
+                                    /**
+                                     * Imagen de la mascota.
+                                     */
                                     GlideImage(
                                         imageModel = post.fotoUrl,
                                         contentScale = ContentScale.Crop,
@@ -181,7 +205,9 @@ fun TusPublicacionesScreen(navController: NavController) {
                                     )
 
                                     Spacer(modifier = Modifier.width(16.dp))
-
+                                    /**
+                                     * Información de la publicación: nombre, localidad y fecha de pérdida.
+                                     */
                                     Column(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalAlignment = Alignment.CenterHorizontally

@@ -11,6 +11,12 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel que gestiona la autenticación de usuarios, recuperación de contraseña
+ * y publicación de mascotas perdidas en Firebase.
+ *
+ * @param authRepository Repositorio de autenticación para interactuar con Firebase Authentication.
+ */
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     private val _usuario = MutableLiveData<FirebaseUser?>()
@@ -37,6 +43,13 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     val cooldownTime = 60_000L
     private var isCooldownRunning = false
 
+    /**
+     * Registra un nuevo usuario en Firebase Authentication y guarda sus datos en Firestore.
+     *
+     * @param correo Correo del usuario.
+     * @param contrasena Contraseña del usuario.
+     * @param nombre Nombre del usuario.
+     */
     fun registrar(correo: String, contrasena: String, nombre: String) {
         authRepository.registrar(correo, contrasena, nombre) { usuario, error ->
             if (usuario != null) {
@@ -47,6 +60,12 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    /**
+     * Inicia sesión con Firebase Authentication.
+     *
+     * @param correo Correo del usuario.
+     * @param contrasena Contraseña del usuario.
+     */
     fun iniciarSesion(correo: String, contrasena: String) {
         authRepository.iniciarSesion(correo, contrasena) { usuario, error ->
             if (usuario != null) {
@@ -58,6 +77,12 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    /**
+     * Verifica si el correo ingresado está registrado en Firestore.
+     *
+     * @param correo Correo a verificar.
+     * @param onResult Callback con `true` si el correo existe o `false` con un mensaje de error.
+     */
     fun verificarCorreoEnFirestore(correo: String, onResult: (Boolean, String?) -> Unit) {
         val db = FirebaseFirestore.getInstance()
 
@@ -79,6 +104,11 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
             }
     }
 
+    /**
+     * Envía un correo de recuperación de contraseña y activa un temporizador de espera.
+     *
+     * @param correo Correo del usuario que solicita la recuperación.
+     */
     fun recuperarContrasena(correo: String) {
         if ((_remainingTime.value ?: 0) > 0) {
             return
@@ -100,6 +130,9 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    /**
+     * Inicia un temporizador para el tiempo de espera antes de permitir otra recuperación de contraseña.
+     */
     private fun iniciarContadorCooldown() {
         if (isCooldownRunning) return
         isCooldownRunning = true
@@ -114,6 +147,13 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    /**
+     * Calcula el tiempo restante del cooldown para recuperar la contraseña.
+     *
+     * - Obtiene el tiempo actual y lo compara con la última solicitud de recuperación.
+     * - Si el cooldown sigue activo, actualiza el tiempo restante y reinicia el temporizador.
+     * - Si el cooldown ha terminado, resetea los valores de tiempo restante y la última solicitud.
+     */
     fun calcularTiempoRestante() {
         val currentTime = System.currentTimeMillis()
         val elapsedTime = currentTime - (_lastRequestTime.value ?: 0)
@@ -128,20 +168,50 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    /**
+     * Inicia el temporizador de cooldown si es necesario.
+     *
+     * - Verifica si hay tiempo restante y si el cooldown aún no está corriendo.
+     * - Si el temporizador no está en ejecución y hay tiempo restante, lo inicia.
+     */
     fun iniciarTemporizadorSiEsNecesario() {
         if ((_remainingTime.value ?: 0) > 0 && !isCooldownRunning) {
             iniciarContadorCooldown()
         }
     }
 
+    /**
+     * Limpia el mensaje de recuperación de contraseña.
+     *
+     * - Se usa para resetear el estado del mensaje de éxito o error
+     *   después de un intento de recuperación de contraseña.
+     */
     fun limpiarMensajeRecuperacion() {
         _mensajeRecuperacion.postValue(null)
     }
 
+    /**
+     * Actualiza manualmente el tiempo restante del cooldown de recuperación de contraseña.
+     *
+     * @param nuevoTiempo Nuevo valor del tiempo restante en segundos.
+     */
     fun actualizarTiempoRestante(nuevoTiempo: Long) {
         _remainingTime.postValue(nuevoTiempo)
     }
 
+    /**
+     * Publica un nuevo reporte de mascota perdida en Firestore con una imagen subida a Firebase Storage.
+     *
+     * @param nombre Nombre de la mascota.
+     * @param edad Edad de la mascota.
+     * @param raza Raza de la mascota.
+     * @param localidad Localidad donde se perdió la mascota.
+     * @param ultimaUbicacion Última ubicación vista.
+     * @param descripcion Descripción de la mascota.
+     * @param diaPerdido Fecha en que se perdió la mascota.
+     * @param fotoUri URI de la foto de la mascota.
+     * @param callback Callback con `true` si la operación fue exitosa, `false` con mensaje de error en caso contrario.
+     */
     fun publicarMascotaPerdida(
         nombre: String,
         edad: String,
@@ -149,19 +219,19 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         localidad: String,
         ultimaUbicacion: String,
         descripcion: String,
-        diaPerdido: String, // Nuevo parámetro para la fecha seleccionada
+        diaPerdido: String,
         fotoUri: Uri,
         callback: (Boolean, String?) -> Unit
     ) {
         val usuario = FirebaseAuth.getInstance().currentUser
         if (usuario == null) {
-            Log.e("AuthViewModel", "❌ El usuario no está autenticado.")
+            Log.e("AuthViewModel", "El usuario no está autenticado.")
             callback(false, "El usuario no está autenticado.")
             return
         }
 
         val userId = usuario.uid
-        Log.d("AuthViewModel", "✅ Usuario autenticado con UID: $userId")
+        Log.d("AuthViewModel", "Usuario autenticado con UID: $userId")
 
         val storageRef = FirebaseStorage.getInstance()
             .reference.child("fotos_mascotas/$userId/imagen_${System.currentTimeMillis()}.jpg")
@@ -177,7 +247,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                         "localidad" to localidad,
                         "ultimaUbicacion" to ultimaUbicacion,
                         "descripcion" to descripcion,
-                        "diaPerdido" to diaPerdido, // Guardar la fecha seleccionada
+                        "diaPerdido" to diaPerdido,
                         "fotoUrl" to downloadUrl.toString(),
                         "usuarioId" to userId,
                         "timestamp" to System.currentTimeMillis()
@@ -191,35 +261,46 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
                     documentReference.set(mascotaData)
                         .addOnSuccessListener {
-                            Log.d("AuthViewModel", "✅ Datos guardados exitosamente en Firestore con ID: $documentId.")
+                            Log.d("AuthViewModel", "Datos guardados exitosamente en Firestore con ID: $documentId.")
                             callback(true, null)
                         }
                         .addOnFailureListener { e ->
-                            Log.e("AuthViewModel", "❌ Error al guardar datos en Firestore: ${e.message}")
+                            Log.e("AuthViewModel", "Error al guardar datos en Firestore: ${e.message}")
                             callback(false, "Error al guardar datos en Firestore: ${e.message}")
                         }
                 }.addOnFailureListener { e ->
-                    Log.e("AuthViewModel", "❌ Error al obtener la URL de la imagen: ${e.message}")
+                    Log.e("AuthViewModel", "Error al obtener la URL de la imagen: ${e.message}")
                     callback(false, "Error al obtener la URL de la imagen: ${e.message}")
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("AuthViewModel", "❌ Error al subir la imagen: ${e.message}")
+                Log.e("AuthViewModel", "Error al subir la imagen: ${e.message}")
                 callback(false, "Error al subir la imagen: ${e.message}")
             }
     }
 
+    /**
+     * Verifica si hay una sesión de usuario activa en Firebase Authentication.
+     */
     fun verificarSesionActiva() {
         val usuarioActual = FirebaseAuth.getInstance().currentUser
         _usuario.postValue(usuarioActual)
     }
 
+    /**
+     * Cierra la sesión del usuario actual.
+     */
     fun cerrarSesion() {
         sesionCerradaManualmente = true
         authRepository.cerrarSesion()
         _usuario.postValue(null)
     }
 
+    /**
+     * Fábrica para la creación del ViewModel `AuthViewModel`.
+     *
+     * @param repository Repositorio de autenticación.
+     */
     class Factory(private val repository: AuthRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {

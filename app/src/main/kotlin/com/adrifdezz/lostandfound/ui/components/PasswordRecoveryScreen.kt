@@ -23,6 +23,15 @@ import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.R
 import androidx.compose.ui.text.style.TextAlign
 
+/**
+ * Pantalla de recuperación de contraseña.
+ *
+ * Permite al usuario ingresar su correo electrónico para recibir un enlace de recuperación.
+ * Se maneja un tiempo de espera antes de poder solicitar otro correo.
+ *
+ * @param authViewModel ViewModel encargado de la autenticación y recuperación de contraseña.
+ * @param onBack Callback que se ejecuta cuando el usuario decide volver a la pantalla de inicio de sesión.
+ */
 @Composable
 fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: () -> Unit) {
     var correo by remember { mutableStateOf("") }
@@ -35,22 +44,26 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     val remainingTime by authViewModel.remainingTime.observeAsState(0L)
 
     val remainingTimeState = remember { mutableLongStateOf(remainingTime) }
+
+    // Se actualiza el tiempo restante cada vez que cambia
     LaunchedEffect(remainingTime) {
         remainingTimeState.longValue = remainingTime
     }
 
+    // Configuración inicial de la pantalla
     LaunchedEffect(Unit) {
         authViewModel.calcularTiempoRestante()
         authViewModel.limpiarMensajeRecuperacion()
         authViewModel.iniciarTemporizadorSiEsNecesario()
     }
 
+    // Muestra un diálogo cuando se ha enviado el correo de recuperación
     LaunchedEffect(mensajeRecuperacion) {
         if (mensajeRecuperacion == "Correo de recuperación enviado") {
             mostrarDialogo = true
         }
     }
-
+    // Anima la barra de progreso del tiempo de espera
     LaunchedEffect(key1 = remainingTime) {
         val cooldownDuration = authViewModel.cooldownTime / 1000f
         val currentProgress = remainingTime.toFloat() / cooldownDuration
@@ -101,6 +114,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // Campo de entrada para el correo
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -132,6 +146,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                     )
                 }
 
+                // Mensaje de error si el correo no es válido
                 if (mensajeError.isNotEmpty()) {
                     Text(
                         text = mensajeError,
@@ -152,6 +167,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
                         .height(50.dp)
                         .background(if (remainingTime > 0) Color.Gray else Color(0xFFECEFF1), RoundedCornerShape(10.dp))
                 ) {
+                    // Botón para enviar el correo de recuperación
                     Button(
                         onClick = {
                             if (correo.isBlank()) {
@@ -213,7 +229,7 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
             }
         }
     }
-
+    // Diálogo de confirmación cuando se envía el correo de recuperación
     if (mostrarDialogo) {
         CustomAlertDialogRecovery(
             title = "Revisa tu bandeja de entrada!",
@@ -226,6 +242,13 @@ fun PasswordRecoveryScreen(authViewModel: AuthViewModel = viewModel(), onBack: (
     }
 }
 
+/**
+ * Diálogo de alerta personalizado para mostrar un mensaje de éxito.
+ *
+ * @param title Título del mensaje.
+ * @param message Contenido del mensaje.
+ * @param onDismiss Acción a ejecutar cuando el usuario cierra el diálogo.
+ */
 @Composable
 fun CustomAlertDialogRecovery(
     title: String,

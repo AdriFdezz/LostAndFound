@@ -32,6 +32,15 @@ import com.adrifdezz.lostandfound.R
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import java.util.*
 
+/**
+ * Pantalla para agregar una publicación de una mascota perdida.
+ *
+ * Permite al usuario ingresar información sobre una mascota perdida, incluyendo
+ * nombre, edad, raza, ubicación, fecha de pérdida y una imagen.
+ *
+ * @param authViewModel ViewModel que maneja la autenticación y la publicación de mascotas perdidas.
+ * @param navController Controlador de navegación para gestionar los cambios de pantalla.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
@@ -46,12 +55,14 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
     var errorMensaje by remember { mutableStateOf("") }
     var mostrarDialogo by remember { mutableStateOf(false) }
 
+    // Selector de imagen desde la galería
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         fotoUri = uri
     }
 
+    // Selector de fecha
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
     val datePickerDialog = DatePickerDialog(
@@ -66,6 +77,9 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
 
     Scaffold(
         topBar = {
+            /**
+             * Barra superior con título y botón de regreso a la pantalla de bienvenida.
+             */
             TopAppBar(
                 title = {
                     Text(
@@ -123,6 +137,7 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Campos de entrada de datos
                 AuthTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre")
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -155,6 +170,7 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Botón para seleccionar una imagen
                 Button(
                     onClick = { imagePickerLauncher.launch("image/*") },
                     modifier = Modifier
@@ -166,6 +182,7 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
                     Text(text = "Seleccionar Foto", color = Color.White, fontWeight = FontWeight.Bold)
                 }
 
+                // Vista previa de la imagen seleccionada
                 fotoUri?.let { uri ->
                     Spacer(modifier = Modifier.height(16.dp))
                     Box(
@@ -198,6 +215,7 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Mensaje de error si los campos no están completos
                 if (errorMensaje.isNotEmpty()) {
                     Text(
                         text = errorMensaje,
@@ -209,6 +227,7 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Botón para publicar la mascota perdida
                 Button(
                     onClick = {
                         val currentDate = Calendar.getInstance()
@@ -263,6 +282,7 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
         }
     }
 
+    // Diálogo de confirmación cuando se publica la mascota perdida
     if (mostrarDialogo) {
         CustomAlertDialogPost(
             title = "Post Creado!",
@@ -272,6 +292,16 @@ fun AddPostScreen(authViewModel: AuthViewModel, navController: NavController) {
     }
 }
 
+/**
+ * Diálogo de alerta personalizado para confirmar la publicación de una mascota perdida.
+ *
+ * Este diálogo muestra un mensaje de éxito cuando el usuario ha creado una publicación
+ * correctamente y le da la opción de cerrar el mensaje.
+ *
+ * @param title Título del diálogo.
+ * @param message Mensaje de confirmación que se mostrará en el diálogo.
+ * @param onDismiss Acción que se ejecuta cuando el usuario presiona el botón "Aceptar".
+ */
 @Composable
 fun CustomAlertDialogPost(
     title: String,

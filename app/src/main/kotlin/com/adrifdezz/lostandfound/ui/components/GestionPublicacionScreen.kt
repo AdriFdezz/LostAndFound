@@ -24,6 +24,14 @@ import com.adrifdezz.lostandfound.data.PostData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.skydoves.landscapist.glide.GlideImage
 
+/**
+ * Pantalla para gestionar una publicación de mascota perdida.
+ *
+ * Permite ver los detalles de la publicación, editar la información o eliminar la publicación junto con sus avistamientos.
+ *
+ * @param postId ID de la publicación que se está gestionando.
+ * @param navController Controlador de navegación para moverse entre pantallas.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GestionPublicacionScreen(postId: String, navController: NavController) {
@@ -31,6 +39,9 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
     val isLoading = remember { mutableStateOf(true) }
     val firestore = FirebaseFirestore.getInstance()
 
+    /**
+     * Efecto lanzado para obtener los datos de la publicación desde Firestore al cargar la pantalla.
+     */
     LaunchedEffect(postId) {
         firestore.collection("mascotas_perdidas")
             .document(postId)
@@ -46,6 +57,9 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
 
     Scaffold(
         topBar = {
+            /**
+             * Barra superior con título y botón de regreso.
+             */
             TopAppBar(
                 title = { Text("Gestionar Publicación", color = Color.White) },
                 navigationIcon = {
@@ -98,6 +112,8 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         post?.let { safePost ->
+
+                            // Muestra la imagen de la mascota
                             GlideImage(
                                 imageModel = safePost.fotoUrl,
                                 contentDescription = "Imagen de ${safePost.nombre}",
@@ -110,6 +126,7 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        // Sección de detalles de la publicación
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -188,6 +205,7 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
 
                         Spacer(modifier = Modifier.height(24.dp))
 
+                        // Botón para editar la publicación
                         Button(
                             onClick = { navController.navigate("edit_post_screen/$postId") },
                             modifier = Modifier.fillMaxWidth(),
@@ -197,7 +215,7 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
                             Text("Editar Publicación", color = Color.White, fontWeight = FontWeight.Bold)
                         }
 
-                        // 🔥 ACTUALIZADO: Elimina el post y sus avistamientos en Firestore
+                        // Botón para eliminar la publicación y sus avistamientos
                         Button(
                             onClick = {
                                 firestore.collection("avistamientos")
@@ -207,7 +225,7 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
                                         for (document in querySnapshot.documents) {
                                             document.reference.delete()
                                         }
-                                        // Ahora eliminamos la publicación después de borrar los avistamientos
+                                        // Eliminar la publicación después de borrar los avistamientos
                                         firestore.collection("mascotas_perdidas").document(postId)
                                             .delete()
                                             .addOnSuccessListener {

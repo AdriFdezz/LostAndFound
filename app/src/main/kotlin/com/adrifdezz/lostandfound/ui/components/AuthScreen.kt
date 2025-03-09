@@ -27,6 +27,12 @@ import com.adrifdezz.lostandfound.ui.utils.BotonMostrarOcultarContrasena
 import com.adrifdezz.lostandfound.ui.utils.validarContrasena
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 
+/**
+ * Pantalla de autenticación que permite al usuario registrarse o iniciar sesión.
+ *
+ * @param authViewModel ViewModel que maneja la lógica de autenticación.
+ * @param navController Controlador de navegación para moverse entre pantallas.
+ */
 @Composable
 fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavController) {
     var esModoRegistro by remember { mutableStateOf(false) }
@@ -42,6 +48,7 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
     val errorState by authViewModel.error.observeAsState()
     val usuarioRegistrado by authViewModel.usuario.observeAsState()
 
+    // Manejador de errores
     LaunchedEffect(errorState) {
         errorState?.let {
             mensajeError = it
@@ -52,6 +59,7 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
         }
     }
 
+    // Observa si el usuario se ha registrado con éxito
     LaunchedEffect(usuarioRegistrado) {
         usuarioRegistrado?.let {
             registroExitoso = esModoRegistro
@@ -96,6 +104,8 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
             Spacer(modifier = Modifier.height(8.dp))
             AuthTextField(value = correo, onValueChange = { correo = it }, label = "Correo electrónico")
             Spacer(modifier = Modifier.height(8.dp))
+
+            // Campo de contraseña con botón de mostrar/ocultar
             AuthTextField(
                 value = contrasena,
                 onValueChange = { contrasena = it },
@@ -106,6 +116,8 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
 
             if (esModoRegistro) {
                 Spacer(modifier = Modifier.height(8.dp))
+
+                // Campo de confirmación de contraseña
                 AuthTextField(
                     value = confirmarContrasena,
                     onValueChange = { confirmarContrasena = it },
@@ -121,6 +133,7 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Botón de registro o inicio de sesión
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -153,12 +166,14 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Botón para recuperación de contraseña
             if (!esModoRegistro) {
                 TextButton(onClick = { navController.navigate("password_recovery_screen") }) {
                     Text(text = "¿Olvidaste tu contraseña?", color = Color.White)
                 }
             }
 
+            // Botón para cambiar entre iniciar sesión y registrarse
             TextButton(onClick = {
                 esModoRegistro = !esModoRegistro
                 mensajeError = ""
@@ -172,6 +187,7 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
         }
     }
 
+    // Diálogo de éxito tras un registro exitoso
     if (registroExitoso) {
         CustomAlertDialogAuth(
             title = "Registro exitoso",
@@ -181,6 +197,15 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel(), navController: NavCon
     }
 }
 
+/**
+ * Campo de texto reutilizable para la autenticación.
+ *
+ * @param value Valor actual del campo.
+ * @param onValueChange Callback cuando el valor cambia.
+ * @param label Etiqueta del campo de texto.
+ * @param visualTransformation Transformación visual del texto (ej. ocultar contraseñas).
+ * @param trailingIcon Ícono adicional en el campo de texto (ej. botón de mostrar contraseña).
+ */
 @Composable
 fun AuthTextField(
     value: String,
@@ -220,6 +245,16 @@ fun AuthTextField(
     }
 }
 
+/**
+ * Diálogo de alerta personalizado para confirmar un registro exitoso.
+ *
+ * Este diálogo muestra un mensaje de éxito cuando el usuario ha completado correctamente
+ * el registro en la aplicación y le permite cerrar el mensaje.
+ *
+ * @param title Título del diálogo.
+ * @param message Mensaje de confirmación que se mostrará en el diálogo.
+ * @param onDismiss Acción que se ejecuta cuando el usuario presiona el botón "Aceptar".
+ */
 @Composable
 fun CustomAlertDialogAuth(
     title: String,

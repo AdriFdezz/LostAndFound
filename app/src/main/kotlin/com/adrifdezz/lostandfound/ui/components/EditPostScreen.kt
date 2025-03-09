@@ -31,6 +31,15 @@ import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
+/**
+ * Pantalla para editar una publicación existente sobre una mascota perdida.
+ *
+ * Carga los datos de la mascota desde Firestore y permite modificarlos,
+ * incluyendo la actualización de la imagen, nombre, edad, raza, ubicación y fecha de pérdida.
+ *
+ * @param postId ID de la publicación que se va a editar.
+ * @param navController Controlador de navegación para gestionar el cambio de pantallas.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditPostScreen(postId: String, navController: NavController) {
@@ -48,12 +57,14 @@ fun EditPostScreen(postId: String, navController: NavController) {
     var errorMensaje by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(true) }
 
+    // Lanzador para seleccionar una nueva imagen desde la galería
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         fotoUri = uri
     }
 
+    // Selector de fecha de pérdida
     val calendar = Calendar.getInstance()
     val datePickerDialog = DatePickerDialog(
         context,
@@ -65,6 +76,9 @@ fun EditPostScreen(postId: String, navController: NavController) {
         calendar.get(Calendar.DAY_OF_MONTH)
     )
 
+    /**
+     * Efecto lanzado para cargar los datos de la publicación desde Firestore al iniciar la pantalla.
+     */
     LaunchedEffect(postId) {
         try {
             val document = FirebaseFirestore.getInstance()
@@ -95,6 +109,9 @@ fun EditPostScreen(postId: String, navController: NavController) {
 
     Scaffold(
         topBar = {
+            /**
+             * Barra superior con título y botón de regreso.
+             */
             TopAppBar(
                 title = { Text(text = "Editar Publicación") },
                 navigationIcon = {
@@ -146,6 +163,7 @@ fun EditPostScreen(postId: String, navController: NavController) {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    // Campos de texto editables
                     AuthTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre")
                     Spacer(modifier = Modifier.height(8.dp))
 
@@ -164,6 +182,7 @@ fun EditPostScreen(postId: String, navController: NavController) {
                     AuthTextField(value = descripcion, onValueChange = { descripcion = it }, label = "Descripción o datos de interés (Opcional)")
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Botón para seleccionar nueva fecha de pérdida
                     Button(
                         onClick = { datePickerDialog.show() },
                         modifier = Modifier
@@ -177,6 +196,7 @@ fun EditPostScreen(postId: String, navController: NavController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Vista previa de la imagen actual o la nueva imagen seleccionada
                     Box(modifier = Modifier.size(150.dp)) {
                         fotoUri?.let { uri ->
                             val inputStream = context.contentResolver.openInputStream(uri)
@@ -205,6 +225,7 @@ fun EditPostScreen(postId: String, navController: NavController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Botón para cambiar la foto
                     Button(
                         onClick = { imagePickerLauncher.launch("image/*") },
                         modifier = Modifier
@@ -218,6 +239,7 @@ fun EditPostScreen(postId: String, navController: NavController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Botón para guardar cambios
                     Button(
                         onClick = {
                             if (nombre.isBlank() || edad.isBlank() || raza.isBlank() || localidad.isBlank() ||

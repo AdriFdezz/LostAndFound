@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+    id("org.jetbrains.dokka") version "1.9.0"
 }
 
 android {
@@ -41,6 +42,16 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packaging {
+        resources {
+            excludes.add("META-INF/LICENSE.md")
+            excludes += "META-INF/NOTICE.md"
+        }
+    }
+
+    namespace = "com.adrifdezz.lostandfound"
+
 }
 
 dependencies {
@@ -54,6 +65,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.landscapist.glide)
     implementation(libs.coil.compose)
+    implementation(libs.dokka.gradle.plugin)
 
 
 

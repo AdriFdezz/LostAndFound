@@ -29,6 +29,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.tasks.await
 
+/**
+ * Pantalla que muestra los detalles de una publicación sobre una mascota perdida.
+ *
+ * Permite visualizar la información de la publicación y, si el usuario autenticado no es el dueño del post,
+ * le da la opción de reportar un avistamiento de la mascota.
+ *
+ * @param postId ID de la publicación que se va a visualizar.
+ * @param navController Controlador de navegación para gestionar los cambios de pantalla.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostDetailsScreen(postId: String, navController: NavController) {
@@ -41,6 +50,9 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
     var ubicacion by remember { mutableStateOf("") }
     val context = LocalContext.current
 
+    /**
+     * Efecto lanzado para obtener los datos de la publicación desde Firestore al cargar la pantalla.
+     */
     LaunchedEffect(postId) {
         try {
             val document = firestore.collection("mascotas_perdidas").document(postId).get().await()
@@ -58,6 +70,9 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
 
     Scaffold(
         topBar = {
+            /**
+             * Barra superior con título y botón de regreso.
+             */
             TopAppBar(
                 title = {
                     Text(
@@ -101,6 +116,9 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
             )
 
             if (errorMessage != null) {
+                /**
+                 * Muestra un mensaje de error en caso de que haya ocurrido un problema al obtener la publicación.
+                 */
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -115,6 +133,9 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                     )
                 }
             } else if (post == null) {
+                /**
+                 * Muestra un indicador de carga mientras se obtienen los datos de Firestore.
+                 */
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -125,6 +146,9 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                 }
             } else {
                 val data = post!!
+                /**
+                 * Muestra los detalles de la publicación.
+                 */
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -133,6 +157,7 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     post?.let { safePost ->
+                        // Muestra la imagen de la mascota
                         GlideImage(
                             imageModel = safePost.fotoUrl,
                             contentDescription = "Imagen de ${safePost.nombre}",
@@ -145,6 +170,7 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Muestra los detalles de la publicación
                     Text(
                         text = "Nombre: ${data.nombre}",
                         style = MaterialTheme.typography.bodyLarge,
@@ -207,6 +233,7 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
                         modifier = Modifier.fillMaxWidth()
                     )
 
+                    // Si el usuario no es el dueño del post, muestra la opción de reportar avistamiento
                     if (data.usuarioId != userId) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
@@ -225,6 +252,10 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
             }
         }
     }
+
+    /**
+     * Diálogo para ingresar la ubicación de un avistamiento de la mascota.
+     */
     if (showDialog) {
         Box(
             modifier = Modifier
@@ -331,6 +362,9 @@ fun PostDetailsScreen(postId: String, navController: NavController) {
         }
     }
 
+    /**
+     * Diálogo de confirmación después de enviar el reporte de avistamiento.
+     */
     if (showConfirmationDialog) {
         Box(
             modifier = Modifier

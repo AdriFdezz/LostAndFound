@@ -118,6 +118,9 @@ fun HistorialNotificacionesScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
+            /**
+             * Barra superior con el título de la pantalla y un botón de regreso.
+             */
             TopAppBar(
                 title = {
                     Text(
@@ -144,6 +147,9 @@ fun HistorialNotificacionesScreen(navController: NavController) {
             )
         }
     ) { paddingValues ->
+        /**
+         * Contenedor principal de la pantalla con fondo de imagen y desenfoque.
+         */
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             Image(
                 painter = painterResource(id = R.drawable.fondo_distorsion),
@@ -165,62 +171,51 @@ fun HistorialNotificacionesScreen(navController: NavController) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(color = Color.White)
-                } else if (errorMessage.isNotEmpty()) {
-                    Text(
+                when {
+                    isLoading -> CircularProgressIndicator(color = Color.White) // Muestra indicador de carga
+                    errorMessage.isNotEmpty() -> Text(
                         text = errorMessage,
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-                } else if (notificaciones.isEmpty()) {
-                    Text(
+                    notificaciones.isEmpty() -> Text(
                         text = "No tienes notificaciones.",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-                } else {
-                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        notificaciones.forEach { notificacion ->
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { navController.navigate("post_details_screen/${notificacion.postId}") },
-                                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.2f)),
-                                shape = RoundedCornerShape(12.dp),
-                                elevation = CardDefaults.cardElevation(4.dp)
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                    else -> {
+                        /**
+                         * Muestra las tarjetas de notificaciones si hay datos disponibles.
+                         */
+                        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            notificaciones.forEach { notificacion ->
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { navController.navigate("post_details_screen/${notificacion.postId}") },
+                                    colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.2f)),
+                                    shape = RoundedCornerShape(12.dp),
+                                    elevation = CardDefaults.cardElevation(4.dp)
                                 ) {
-                                    GlideImage(
-                                        imageModel = notificacion.fotoUrl ?: "",
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .size(100.dp)
-                                            .clip(RoundedCornerShape(8.dp))
-                                            .background(Color.White.copy(alpha = 0.2f)),
-                                        contentDescription = "Imagen de la mascota"
-                                    )
-
-                                    Spacer(modifier = Modifier.width(16.dp))
-
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    Row(
+                                        modifier = Modifier.padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text(
-                                            text = "Avistamiento en:\n ${notificacion.ubicacion}",
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            color = Color.White,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier.fillMaxWidth()
+                                        GlideImage(
+                                            imageModel = notificacion.fotoUrl ?: "",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .size(100.dp)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .background(Color.White.copy(alpha = 0.2f)),
+                                            contentDescription = "Imagen de la mascota"
                                         )
+
+                                        Spacer(modifier = Modifier.width(16.dp))
 
                                         val fechaLegible = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                                             .format(Date(notificacion.timestamp))

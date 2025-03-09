@@ -28,16 +28,25 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.adrifdezz.lostandfound.data.PostData
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 
+/**
+ * Pantalla de bienvenida que muestra la lista de mascotas perdidas y permite al usuario
+ * crear una nueva publicación, ver sus publicaciones, notificaciones o cerrar sesión.
+ *
+ * @param navController Controlador de navegación para gestionar las transiciones entre pantallas.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WelcomeScreen(navController: NavController) {
-    val posts = remember { mutableStateListOf<PostData>() }
-    var isLoading by remember { mutableStateOf(true) }
-    var errorMessage by remember { mutableStateOf("") }
-    var expandedMenu by remember { mutableStateOf(false) }
+    val posts = remember { mutableStateListOf<PostData>() } // Lista de publicaciones disponibles
+    var isLoading by remember { mutableStateOf(true) } // Estado de carga de las publicaciones
+    var errorMessage by remember { mutableStateOf("") } // Mensaje de error en caso de fallo
+    var expandedMenu by remember { mutableStateOf(false) } // Estado del menú desplegable
 
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(AuthRepository()))
 
+    /**
+     * Carga las publicaciones de mascotas perdidas desde Firestore al iniciarse la pantalla.
+     */
     LaunchedEffect(Unit) {
         FirebaseFirestore.getInstance()
             .collection("mascotas_perdidas")
@@ -61,6 +70,9 @@ fun WelcomeScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
+            /**
+             * Barra superior con título y menú de opciones.
+             */
             TopAppBar(
                 title = {
                     Text(
@@ -77,6 +89,9 @@ fun WelcomeScreen(navController: NavController) {
                             tint = Color.White
                         )
                     }
+                    /**
+                     * Menú desplegable con opciones del usuario.
+                     */
                     DropdownMenu(
                         expanded = expandedMenu,
                         onDismissRequest = { expandedMenu = false }
@@ -141,6 +156,9 @@ fun WelcomeScreen(navController: NavController) {
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
+                /**
+                 * Botón para crear una nueva publicación.
+                 */
                 Button(
                     onClick = { navController.navigate("add_post_screen") },
                     modifier = Modifier
@@ -182,6 +200,13 @@ fun WelcomeScreen(navController: NavController) {
     }
 }
 
+/**
+ * Componente reutilizable que representa una tarjeta con la información de una publicación.
+ *
+ * @param post Datos de la publicación.
+ * @param navController Controlador de navegación para redirigir a la pantalla de detalles.
+ * @param isUserPost Indica si la publicación pertenece al usuario actual (para gestión de publicaciones propias).
+ */
 @Composable
 fun PostCard(post: PostData, navController: NavController, isUserPost: Boolean = false) {
     Card(
@@ -215,6 +240,9 @@ fun PostCard(post: PostData, navController: NavController, isUserPost: Boolean =
 
             Spacer(modifier = Modifier.width(16.dp))
 
+            /**
+             * Información de la publicación: nombre, localidad y fecha de pérdida.
+             */
             Column {
                 Text(
                     text = "Nombre: ${post.nombre}",
