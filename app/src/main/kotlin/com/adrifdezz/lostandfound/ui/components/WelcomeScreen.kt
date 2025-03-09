@@ -47,7 +47,7 @@ fun WelcomeScreen(navController: NavController) {
                 for (document in result) {
                     val post = document.toObject(PostData::class.java)
                     post.let {
-                        it.id = document.id // Asigna el ID del documento al objeto PostData
+                        it.id = document.id
                         posts.add(it)
                     }
                 }
@@ -86,6 +86,13 @@ fun WelcomeScreen(navController: NavController) {
                             onClick = {
                                 expandedMenu = false
                                 navController.navigate("tus_publicaciones_screen") // Navega a la pantalla de publicaciones del usuario
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Notificaciones") },
+                            onClick = {
+                                expandedMenu = false
+                                navController.navigate("notificaciones_screen") // Nueva pantalla de notificaciones
                             }
                         )
                         DropdownMenuItem(

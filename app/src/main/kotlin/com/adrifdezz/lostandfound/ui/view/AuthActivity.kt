@@ -1,6 +1,7 @@
 package com.adrifdezz.lostandfound.ui.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
@@ -10,12 +11,13 @@ import androidx.navigation.navArgument
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.ui.components.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
 
 class AuthActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val factory = AuthViewModel.Factory(AuthRepository())
         val authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
@@ -65,6 +67,9 @@ class AuthActivity : ComponentActivity() {
                 ) { backStackEntry ->
                     val postId = backStackEntry.arguments?.getString("postId") ?: return@composable
                     EditPostScreen(postId, navController)
+                }
+                composable("notificaciones_screen") {
+                    HistorialNotificacionesScreen(navController = navController)
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.adrifdezz.lostandfound.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,10 +29,10 @@ import com.skydoves.landscapist.glide.GlideImage
 fun GestionPublicacionScreen(postId: String, navController: NavController) {
     var post by remember { mutableStateOf<PostData?>(null) }
     val isLoading = remember { mutableStateOf(true) }
+    val firestore = FirebaseFirestore.getInstance()
 
     LaunchedEffect(postId) {
-        FirebaseFirestore.getInstance()
-            .collection("mascotas_perdidas")
+        firestore.collection("mascotas_perdidas")
             .document(postId)
             .get()
             .addOnSuccessListener { document ->
@@ -196,14 +197,29 @@ fun GestionPublicacionScreen(postId: String, navController: NavController) {
                             Text("Editar Publicación", color = Color.White, fontWeight = FontWeight.Bold)
                         }
 
+                        // 🔥 ACTUALIZADO: Elimina el post y sus avistamientos en Firestore
                         Button(
                             onClick = {
-                                FirebaseFirestore.getInstance()
-                                    .collection("mascotas_perdidas")
-                                    .document(postId)
-                                    .delete()
-                                    .addOnSuccessListener {
-                                        navController.popBackStack()
+                                firestore.collection("avistamientos")
+                                    .whereEqualTo("postId", postId)
+                                    .get()
+                                    .addOnSuccessListener { querySnapshot ->
+                                        for (document in querySnapshot.documents) {
+                                            document.reference.delete()
+                                        }
+                                        // Ahora eliminamos la publicación después de borrar los avistamientos
+                                        firestore.collection("mascotas_perdidas").document(postId)
+                                            .delete()
+                                            .addOnSuccessListener {
+                                                Log.d("GestionPublicacion", "Publicación y avistamientos eliminados correctamente.")
+                                                navController.popBackStack()
+                                            }
+                                            .addOnFailureListener { exception ->
+                                                Log.e("GestionPublicacion", "Error eliminando la publicación: ${exception.message}")
+                                            }
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Log.e("GestionPublicacion", "Error eliminando avistamientos: ${exception.message}")
                                     }
                             },
                             modifier = Modifier.fillMaxWidth(),

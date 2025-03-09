@@ -1,40 +1,15 @@
 package com.adrifdezz.lostandfound.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,37 +22,82 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.adrifdezz.lostandfound.R
-import com.adrifdezz.lostandfound.data.PostData
+import com.adrifdezz.lostandfound.data.NotificacionAvistamiento
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.skydoves.landscapist.glide.GlideImage
+import java.text.SimpleDateFormat
+import java.util.*
 
+/**
+ * Pantalla que muestra el historial de notificaciones de avistamientos de mascotas perdidas.
+ * Permite visualizar los reportes de otros usuarios sobre las publicaciones del usuario autenticado.
+ *
+ * - Se conecta en tiempo real con Firestore mediante `addSnapshotListener()`.
+ * - Si una publicación ha sido eliminada, sus avistamientos también se eliminan automáticamente.
+ *
+ * @param navController Controlador de navegación para gestionar la navegación entre pantallas.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TusPublicacionesScreen(navController: NavController) {
-    val posts = remember { mutableStateListOf<PostData>() }
-    var isLoading by remember { mutableStateOf(true) }
-    var errorMessage by remember { mutableStateOf("") }
+fun HistorialNotificacionesScreen(navController: NavController) {
+    val userId = FirebaseAuth.getInstance().currentUser?.uid  // Obtiene el ID del usuario autenticado
+    var notificaciones by remember { mutableStateOf(listOf<NotificacionAvistamiento>()) } // Lista de notificaciones
+    var isLoading by remember { mutableStateOf(true) } // Estado de carga
+    var errorMessage by remember { mutableStateOf("") } // Mensaje de error
+    val firestore = FirebaseFirestore.getInstance() // Instancia de Firestore
+    var listener: ListenerRegistration? by remember { mutableStateOf(null) } // Listener de Firestore
 
-    val userId = FirebaseAuth.getInstance().currentUser?.uid
-
+    /**
+     * Se ejecuta cuando la pantalla se carga por primera vez. Configura un **listener en Firestore**
+     * para actualizar las notificaciones en **tiempo real**.
+     */
     LaunchedEffect(userId) {
         if (userId != null) {
-            FirebaseFirestore.getInstance()
-                .collection("mascotas_perdidas")
-                .whereEqualTo("usuarioId", userId)
-                .get()
-                .addOnSuccessListener { result ->
-                    posts.clear()
-                    for (document in result) {
-                        val post = document.toObject(PostData::class.java)
-                        post.id = document.id
-                        posts.add(post)
+            listener = firestore.collection("avistamientos")
+                .whereEqualTo("usuarioId", userId) // Filtra por avistamientos del usuario autenticado
+                .addSnapshotListener { querySnapshot, exception ->
+                    if (exception != null) {
+                        errorMessage = "Error al cargar notificaciones."
+                        isLoading = false
+                        return@addSnapshotListener
                     }
-                    isLoading = false
-                }
-                .addOnFailureListener { e ->
-                    errorMessage = e.localizedMessage ?: "Error al cargar tus publicaciones."
+
+                    val nuevasNotificaciones = mutableListOf<NotificacionAvistamiento>()
+
+                    querySnapshot?.documents?.forEach { doc ->
+                        val postId = doc.getString("postId") ?: return@forEach
+                        val ubicacion = doc.getString("ubicacion") ?: "Ubicación desconocida"
+                        val timestamp = doc.getLong("timestamp") ?: 0L
+
+                        // Consulta la publicación en `mascotas_perdidas` para obtener información adicional
+                        firestore.collection("mascotas_perdidas").document(postId).get()
+                            .addOnSuccessListener { postDoc ->
+                                if (postDoc.exists()) {
+                                    val fotoUrl = postDoc.getString("fotoUrl") ?: ""
+                                    nuevasNotificaciones.add(
+                                        NotificacionAvistamiento(
+                                            id = doc.id,
+                                            postId = postId,
+                                            ubicacion = ubicacion,
+                                            fotoUrl = fotoUrl,
+                                            timestamp = timestamp
+                                        )
+                                    )
+                                    notificaciones = nuevasNotificaciones
+                                } else {
+                                    // Si la publicación ha sido eliminada, se borra también el avistamiento
+                                    firestore.collection("avistamientos").document(doc.id).delete()
+                                        .addOnSuccessListener {
+                                            Log.d("HistorialNotificaciones", "Avistamiento eliminado porque la publicación ya no existe.")
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.e("HistorialNotificaciones", "Error eliminando avistamiento: ${e.message}")
+                                        }
+                                }
+                            }
+                    }
                     isLoading = false
                 }
         } else {
@@ -86,12 +106,22 @@ fun TusPublicacionesScreen(navController: NavController) {
         }
     }
 
+    /**
+     * Se ejecuta cuando la pantalla se cierra para **eliminar el listener de Firestore**
+     * y evitar fugas de memoria.
+     */
+    DisposableEffect(Unit) {
+        onDispose {
+            listener?.remove()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Tus Publicaciones",
+                        text = "Notificaciones Avistamientos",
                         color = Color.White,
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
@@ -105,9 +135,7 @@ fun TusPublicacionesScreen(navController: NavController) {
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                ),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
                 modifier = Modifier.background(
                     Brush.verticalGradient(
                         colors = listOf(Color.Black.copy(alpha = 0.6f), Color.Transparent)
@@ -147,9 +175,9 @@ fun TusPublicacionesScreen(navController: NavController) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-                } else if (posts.isEmpty()) {
+                } else if (notificaciones.isEmpty()) {
                     Text(
-                        text = "No tienes publicaciones.",
+                        text = "No tienes notificaciones.",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
@@ -157,11 +185,11 @@ fun TusPublicacionesScreen(navController: NavController) {
                     )
                 } else {
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        posts.forEach { post ->
+                        notificaciones.forEach { notificacion ->
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { navController.navigate("gestion_publicacion_screen/${post.id}") },
+                                    .clickable { navController.navigate("post_details_screen/${notificacion.postId}") },
                                 colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.2f)),
                                 shape = RoundedCornerShape(12.dp),
                                 elevation = CardDefaults.cardElevation(4.dp)
@@ -171,13 +199,13 @@ fun TusPublicacionesScreen(navController: NavController) {
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     GlideImage(
-                                        imageModel = post.fotoUrl,
+                                        imageModel = notificacion.fotoUrl ?: "",
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier
                                             .size(100.dp)
                                             .clip(RoundedCornerShape(8.dp))
                                             .background(Color.White.copy(alpha = 0.2f)),
-                                        contentDescription = "Imagen de ${post.nombre}"
+                                        contentDescription = "Imagen de la mascota"
                                     )
 
                                     Spacer(modifier = Modifier.width(16.dp))
@@ -187,26 +215,19 @@ fun TusPublicacionesScreen(navController: NavController) {
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         Text(
-                                            text = "Nombre: ${post.nombre}",
+                                            text = "Avistamiento en:\n ${notificacion.ubicacion}",
                                             style = MaterialTheme.typography.bodyLarge,
                                             color = Color.White,
                                             textAlign = TextAlign.Center,
                                             modifier = Modifier.fillMaxWidth()
                                         )
-                                        Spacer(modifier = Modifier.height(4.dp))
+
+                                        val fechaLegible = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                                            .format(Date(notificacion.timestamp))
 
                                         Text(
-                                            text = "Localidad: ${post.localidad}",
+                                            text = "Fecha: $fechaLegible",
                                             style = MaterialTheme.typography.bodyMedium,
-                                            color = Color.White,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier.fillMaxWidth()
-                                        )
-                                        Spacer(modifier = Modifier.height(4.dp))
-
-                                        Text(
-                                            text = "Fecha de pérdida: ${post.diaPerdido}",
-                                            style = MaterialTheme.typography.bodySmall,
                                             color = Color.White,
                                             textAlign = TextAlign.Center,
                                             modifier = Modifier.fillMaxWidth()
