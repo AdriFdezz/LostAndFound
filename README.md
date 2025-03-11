@@ -47,7 +47,7 @@
 
 - En el código podemos ver varios **comentarios realizados con KDOC** para aclarar qué está pasando y cómo funciona.
 * Se genera documentación automática gracias a **Dokka**, disponible en:
-  - [index.html](app/build/dokka/html/index.html) _(De esta forma, es mucho más fácil tener toda la documentación en un mismo documento)._
+  - [index.html](dokka/index.html) _(De esta forma, es mucho más fácil tener toda la documentación en un mismo documento)._
 
 ---
 
