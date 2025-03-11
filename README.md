@@ -48,6 +48,7 @@
 - En el código podemos ver varios **comentarios realizados con KDOC** para aclarar qué está pasando y cómo funciona.
 * Se genera documentación automática gracias a **Dokka**, disponible en:
   - [index.html](dokka/index.html) _(De esta forma, es mucho más fácil tener toda la documentación en un mismo documento)._
+    - Para verlo creo que necesitas abrir el index.html en local una vez clonado el repositorio si no te abre solo el codigo html.
 
 ---
 
