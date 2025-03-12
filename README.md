@@ -36,7 +36,7 @@
 * Otra opción para probar el código es desde el **emulador de Android Studio**, cuya configuración explico brevemente al inicio del video de YouTube.
 - Como última opción, podemos también probar la aplicación con un **emulador gratuito como BlueStacks** (funciona, aunque un poco lento).
 * Te proporciono todos los enlaces de interés para la evaluación del proyecto:
-  - **[Video de YouTube](https://www.youtube.com/watch?v=Z9vW81qGsuI)** _(En el video se explica en qué consiste la aplicación, cómo probarla de diferentes formas y una demostración de las funcionalidades. (38 min de chapa, discúlpame 😂)._
+  - **[Video de YouTube](https://www.youtube.com/watch?v=Z9vW81qGsuI)** _(En el video se explica en qué consiste la aplicación, cómo probarla de diferentes formas y una demostración de las funcionalidades. (38 min de chapa, discúlpame)._
   - **[Descarga de Android Studio](https://developer.android.com/studio?hl=es-419)**
   - **[Descarga de BlueStacks](https://www.bluestacks.com/es/index.html)**
 - Para las **preguntas evaluativas**, puedes acceder desde aquí **[preguntas.md](preguntas.md)** o buscar el archivo Markdown en este repositorio.

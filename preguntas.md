@@ -74,6 +74,8 @@
       }
       ```
 
+---
+
 ## Almacenamiento en la nube (5f):
 
 - **Si tu software utiliza almacenamiento en la nube, ¿cómo garantizas la seguridad y disponibilidad de los datos?**
@@ -100,6 +102,8 @@
 - **Si no usas la nube, ¿cómo podrías integrarla en futuras versiones?**
 
     - En mi caso, sí uso la nube en la aplicación, pero en un futuro se podría realizar una copia de seguridad de los datos en otro servicio en la nube diferente para aumentar la protección de los datos de los usuarios.
+
+---
 
 ## Seguridad y regulación (5i):
 
@@ -132,6 +136,8 @@
     - Aunque hay algunas medidas de seguridad establecidas, me gustaría mejorar la validación de la información porque creo que puede ser aún más estricta.
     - Otra implementación que me gustaría realizar sería la autenticación en dos pasos para proteger las cuentas de los usuarios de accesos no autorizados.
 
+---
+
 ## Implicación de las THD en negocio y planta (2e):
 
 - **¿Qué impacto tendría tu software en un entorno de negocio o en una planta industrial?**
@@ -151,6 +157,8 @@
     - También se podrían beneficiar, a una escala mayor, ayuntamientos o entidades gubernamentales para mejorar la gestión de mascotas perdidas en la ciudad o territorio sobre el que gobiernen.
     - Otra opción sería para vecindarios o comunidades, permitiendo que los vecinos estén al tanto de las mascotas perdidas de sus alrededores y aumentando la posibilidad de que sean encontradas.
 
+---
+
 ## Mejoras en IT y OT (2f):
 
 - **¿Cómo puede tu software facilitar la integración entre entornos IT y OT?**
@@ -169,6 +177,8 @@
     - Se podría implementar inteligencia artificial en la aplicación para reconocer las imágenes de las mascotas perdidas y compararlas con una base de datos de mascotas ya reportadas, facilitando la identificación de sus dueños de manera rápida y sencilla.
     - Se podría realizar un análisis de patrones en las pérdidas de mascotas mediante el uso de Big Data, permitiendo mejorar la prevención en áreas con un mayor porcentaje de pérdidas.
     - Se podrían integrar collares con GPS para que los dueños reciban alertas tempranas si la mascota sale de una zona designada.
+
+---
 
 ## Tecnologías Habilitadoras Digitales (2g):
 
