@@ -221,8 +221,9 @@ fun HistorialNotificacionesScreen(navController: NavController) {
                                             modifier = Modifier.fillMaxWidth()
                                         )
 
-                                        val fechaLegible = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                                            .format(Date(notificacion.timestamp))
+                                        val fechaLegible = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).apply {
+                                            timeZone = TimeZone.getTimeZone("Europe/Madrid")
+                                        }.format(Date(notificacion.timestamp))
 
                                         Text(
                                             text = "Fecha: $fechaLegible",

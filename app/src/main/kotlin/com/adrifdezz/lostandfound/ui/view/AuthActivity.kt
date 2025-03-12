@@ -1,5 +1,6 @@
 package com.adrifdezz.lostandfound.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,7 @@ import androidx.navigation.navArgument
 import com.adrifdezz.lostandfound.data.AuthRepository
 import com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel
 import com.adrifdezz.lostandfound.ui.components.*
+import com.google.firebase.auth.FirebaseAuth
 
 /**
  * `AuthActivity` es la actividad principal encargada de gestionar la autenticación del usuario
@@ -21,6 +23,15 @@ class AuthActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Verifica si la app fue reinstalada y fuerza cierre de sesión
+        val sharedPref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val primeraVez = sharedPref.getBoolean("primera_vez", true)
+
+        if (primeraVez) {
+            FirebaseAuth.getInstance().signOut() // Cierra sesión
+            sharedPref.edit().putBoolean("primera_vez", false).apply() // Marca como iniciado
+        }
 
         // Crea una instancia del AuthViewModel con su fábrica personalizada
         val factory = AuthViewModel.Factory(AuthRepository())
