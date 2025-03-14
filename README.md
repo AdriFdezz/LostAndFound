@@ -49,8 +49,8 @@
 
 - En el código podemos ver varios **comentarios realizados con KDOC** para aclarar qué está pasando y cómo funciona.
 * Se genera documentación automática gracias a **Dokka**, disponible en:
-  - [index.html](app/build/dokka/html/index.html) _(De esta forma, es mucho más fácil tener toda la documentación en un mismo documento)._
-    - Para verlo necesitas abrir el index.html en la carpeta en local donde has clonado el repositorio si no te abre solo el codigo html (una vez abres el index.html dejalo abierto un par de minutos puede tardar en cargar todo).
+  - [dokka_documentation.zip](dokka/dokka_documentacion.zip) _(Encuentras el Zip dentro del directorio dokka)._
+    - Para verlo necesitas abrir el zip  y abrir el index.html en tu navegador puede tardar en funcionar del todo un par de minutos.
 
 ---
 
