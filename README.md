@@ -36,6 +36,8 @@
 * Podemos encontrarla en el directorio `/apk` en este repositorio.
 - En el caso de querer hacer la APK desde cero, lo explico con detalle en el video de YouTube, donde se muestra la explicación del proyecto, cómo probarlo y cómo construir la APK.
 * Otra opción para probar el código es desde el **emulador de Android Studio**, cuya configuración explico brevemente al inicio del video de YouTube.
+  * Para ver todas los directorios y archivos dentro de Android Studio asegurarse que tenemos marcada la opcion de Project como se ve en la imagen.
+![Ver directorio AndroidStudio](assets/androidStudio_carpetas.PNG)
 - Como última opción, podemos también probar la aplicación con un **emulador gratuito como BlueStacks** (funciona, aunque un poco lento).
 * Te proporciono todos los enlaces de interés para la evaluación del proyecto:
   - **[Video de YouTube](https://www.youtube.com/watch?v=dm1smtHQcxA)** _(En el video se explica en qué consiste la aplicación, cómo probarla de diferentes formas y una demostración de las funcionalidades. (50 min de chapa, discúlpame pero esta todo incluido)._
