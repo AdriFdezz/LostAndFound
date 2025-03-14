@@ -100,14 +100,21 @@ fun WelcomeScreen(navController: NavController) {
                             text = { Text("Tus Publicaciones") },
                             onClick = {
                                 expandedMenu = false
-                                navController.navigate("tus_publicaciones_screen") // Navega a la pantalla de publicaciones del usuario
+                                navController.navigate("tus_publicaciones_screen")
                             }
                         )
                         DropdownMenuItem(
                             text = { Text("Notificaciones") },
                             onClick = {
                                 expandedMenu = false
-                                navController.navigate("notificaciones_screen") // Nueva pantalla de notificaciones
+                                navController.navigate("notificaciones_screen")
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Perfil") },
+                            onClick = {
+                                expandedMenu = false
+                                navController.navigate("perfil_screen")
                             }
                         )
                         DropdownMenuItem(

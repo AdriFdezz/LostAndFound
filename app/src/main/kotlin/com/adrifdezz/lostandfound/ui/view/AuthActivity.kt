@@ -33,9 +33,9 @@ class AuthActivity : ComponentActivity() {
             sharedPref.edit().putBoolean("primera_vez", false).apply() // Marca como iniciado
         }
 
-        // Crea una instancia del AuthViewModel con su fábrica personalizada
+        // Crea una instancia del AuthViewModel con su factory personalizada
         val factory = AuthViewModel.Factory(AuthRepository())
-        val authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
+        val authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         setContent {
             val navController = rememberNavController()
@@ -92,6 +92,9 @@ class AuthActivity : ComponentActivity() {
                 composable("notificaciones_screen") {
                     HistorialNotificacionesScreen(navController = navController)
                 }
+                composable("perfil_screen") {
+                    PerfilScreen(authViewModel = authViewModel, navController = navController)
+                }
             }
 
             /**
@@ -101,7 +104,7 @@ class AuthActivity : ComponentActivity() {
             authViewModel.esInicioSesionExitoso.observe(this) { esExitoso ->
                 if (esExitoso) {
                     navController.navigate("welcome_screen") {
-                        popUpTo("auth_screen") { inclusive = true } // Elimina `auth_screen` del stack de navegación
+                        popUpTo("auth_screen") { inclusive = true }
                     }
                 }
             }
@@ -113,7 +116,7 @@ class AuthActivity : ComponentActivity() {
             authViewModel.usuario.observe(this) { user ->
                 if (user == null && authViewModel.sesionCerradaManualmente) {
                     navController.navigate("auth_screen") {
-                        popUpTo("welcome_screen") { inclusive = true } // Elimina `welcome_screen` del stack de navegación
+                        popUpTo("welcome_screen") { inclusive = true }
                     }
                 }
             }

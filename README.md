@@ -9,7 +9,7 @@
 - **Uso de Firebase Console**: Herramienta de desarrollo de aplicaciones de Google, la cual usamos:
   - **Firestore Database**: Base de datos en tiempo real para almacenar datos sobre los posts y usuarios.
   - **Authentication**: Método de registro e inicio de sesión por correo electrónico.
-  - **Storage**: Almacenamiento en la nube para guardar archivos como fotos.
+  - **Storage**: Almacenamiento en la nube para guardar archivos multimedia como fotos.
 
 ---
 
@@ -20,11 +20,13 @@
 - En el caso de que tengamos una cuenta ya existente y olvidemos su contraseña, tenemos una funcionalidad de cambio de contraseña por correo electrónico.
 * Una vez con una sesión iniciada, podremos crear un post con los datos y la foto de nuestra mascota perdida, la cual aparecerá en el menú principal de la aplicación para que otros usuarios puedan verla.
 - Desde una opción en un menú, podremos editar el post o cerrarlo en caso de encontrar nuestra mascota.
-* Podremos realizar avisos de avistamientos sobre los posts de otros usuarios, en los cuales aparecerá un botón para emitir una notificación al dueño del post. **Este botón no aparecerá si es una publicación del usuario logueado.**
-- Estos avisos aparecerán en una opción en el menú llamada **Notificaciones** (solo aparecen las notificaciones de avistamientos sobre nuestros posts).
-* Si cerramos un post, este desaparecerá del menú principal y **se eliminarán las notificaciones de avistamiento sobre ese post** para evitar saturar la aplicación.
-- Por último, en el menú podemos encontrar una opción para **cerrar sesión**, que nos llevará a la ventana de login de la aplicación.
-* Como detalle, una vez que inicias sesión, si cierras completamente la aplicación y la vuelves a abrir, **permanecerá tu sesión iniciada** hasta que cierres sesión manualmente mediante la opción del menú.
+* Podremos realizar avisos de avistamientos sobre los posts de otros usuarios, en los cuales aparecerá un botón para emitir una notificación al dueño del post. Este botón no aparecerá si es una publicación del usuario que esta autenticado en ese momento.
+- Estos avisos aparecerán en una opción en el menú llamada Notificaciones (solo aparecen las notificaciones de avistamientos sobre nuestros posts).
+* Si cerramos un post, este desaparecerá del menú principal y se eliminarán las notificaciones de avistamiento sobre ese post para evitar saturar la aplicación.
+- Tenemos tambien en el menu principal de perfil en el cual podremos ver nuestro nombre y correo actual el cual estamos usando con la posibilidad de cambiarlos si el usaurio quiere, para cambiarlo se le enviara un correo de verificación al nuevo correo.
+* Tambien existe la posibilidad desde perfil de eliminar la cuenta de tal manera que borraremos todo lo relacionado con la cuenta posts, notificaciones de avistamientos y la propia cuenta de esta manera el usuario que quiera eliminar su cuenta no dejara rastro ni en la aplicaición ni en la base de datos.
+- Por último, en el menú podemos encontrar una opción para cerrar sesión, que nos llevará a la ventana de login de la aplicación.
+* Como detalle, una vez que inicias sesión, si cierras completamente la aplicación y la vuelves a abrir, permanecerá tu sesión iniciada hasta que cierres sesión manualmente mediante la opción del menú.
 
 ---
 
@@ -36,7 +38,7 @@
 * Otra opción para probar el código es desde el **emulador de Android Studio**, cuya configuración explico brevemente al inicio del video de YouTube.
 - Como última opción, podemos también probar la aplicación con un **emulador gratuito como BlueStacks** (funciona, aunque un poco lento).
 * Te proporciono todos los enlaces de interés para la evaluación del proyecto:
-  - **[Video de YouTube](https://www.youtube.com/watch?v=Z9vW81qGsuI)** _(En el video se explica en qué consiste la aplicación, cómo probarla de diferentes formas y una demostración de las funcionalidades. (38 min de chapa, discúlpame)._
+  - **[Video de YouTube](https://www.youtube.com/watch?v=dm1smtHQcxA)** _(En el video se explica en qué consiste la aplicación, cómo probarla de diferentes formas y una demostración de las funcionalidades. (50 min de chapa, discúlpame pero esta todo incluido)._
   - **[Descarga de Android Studio](https://developer.android.com/studio?hl=es-419)**
   - **[Descarga de BlueStacks](https://www.bluestacks.com/es/index.html)**
 - Para las **preguntas evaluativas**, puedes acceder desde aquí **[preguntas.md](preguntas.md)** o buscar el archivo Markdown en este repositorio.
@@ -47,14 +49,14 @@
 
 - En el código podemos ver varios **comentarios realizados con KDOC** para aclarar qué está pasando y cómo funciona.
 * Se genera documentación automática gracias a **Dokka**, disponible en:
-  - [index.html](dokka/index.html) _(De esta forma, es mucho más fácil tener toda la documentación en un mismo documento)._
-    - Para verlo creo que necesitas abrir el index.html en local una vez clonado el repositorio si no te abre solo el codigo html.
+  - [index.html](app/build/dokka/html/index.html) _(De esta forma, es mucho más fácil tener toda la documentación en un mismo documento)._
+    - Para verlo necesitas abrir el index.html en la carpeta en local donde has clonado el repositorio si no te abre solo el codigo html (una vez abres el index.html dejalo abierto un par de minutos puede tardar en cargar todo).
 
 ---
 
 ## **Para un futuro**
 
-- Me han quedado cosas sin hacer por falta de tiempo, como por ejemplo **alguna funcionalidad con la API de Google Maps** para incluir mapas.
-- **Mejorar el sistema de notificaciones** para que notifique al usuario con la aplicación completamente cerrada.
-  - Me pasé varios días atascado y **no conseguí sacarlo adelante**, por lo que opté por hacerlo dentro de la aplicación. **Cumple su cometido, pero no como a mí me gustaría.**
-- En un futuro, si continuamos con el desarrollo, **se podrían agregar estas funcionalidades** para perfeccionar la aplicación.  
+- Me han quedado cosas sin hacer por falta de tiempo, como por ejemplo alguna funcionalidad con la API de Google Maps para incluir mapas.
+- Mejorar el sistema de notificaciones para que notifique al usuario con la aplicación completamente cerrada.
+  - Me pasé varios días atascado y no conseguí sacarlo adelante, por lo que opté por hacerlo dentro de la aplicación. Cumple su cometido, pero no como a mí me gustaría.
+- En un futuro, si continuamos con el desarrollo, se podrían agregar estas funcionalidades para perfeccionar la aplicación.  

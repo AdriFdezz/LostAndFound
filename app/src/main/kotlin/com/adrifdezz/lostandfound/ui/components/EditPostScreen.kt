@@ -113,15 +113,22 @@ fun EditPostScreen(postId: String, navController: NavController) {
              * Barra superior con título y botón de regreso.
              */
             TopAppBar(
-                title = { Text(text = "Editar Publicación") },
+                title = { Text("Editar Publicación", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_back),
-                            contentDescription = "Volver"
+                            contentDescription = "Volver",
+                            tint = Color.White
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                modifier = Modifier.background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Black.copy(alpha = 0.6f), Color.Transparent)
+                    )
+                )
             )
         }
     ) { paddingValues ->

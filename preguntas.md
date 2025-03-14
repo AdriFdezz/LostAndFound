@@ -120,14 +120,13 @@
 
     - Cumplo algunos puntos de la GDPR, pero podrían ser más. Aquí te dejo los que se implementan en el proyecto y los que podrían implementarse en un futuro.
         - **Implementados:**
-            - **Derecho al olvido (parcialmente):** Los usuarios, en cualquier momento, pueden eliminar todos sus posts e informaciones relacionadas con los mismos. Por "parcialmente" me refiero a que debería implementarse una opción para borrar la cuenta completamente, eliminando cualquier rastro.
+            - **Derecho al olvido:** Los usuarios, en cualquier momento, pueden eliminar todos sus posts e informaciones relacionadas con los mismos. Tambien existe la posibilidad a traves de un botón en perfil de eliminar la cuenta por completo y no dejar ratro de nada, borrando posts, avistamientos y la cuenta completamente.
             - **Acceso a los datos:** Solo el dueño del post puede editarlo y eliminarlo completamente.
             - **Almacenamiento seguro:** Los datos que el usuario introduce en la aplicación se almacenan en Firebase, que cumple con los estándares de seguridad y regulaciones internacionales.
+            - **Consentimiento del usuario:** Implementada una checkbox para que los usuarios acepten los términos antes de registrar una cuenta y aclarar que sus datos pueden ser recogidos.
             - **Uso responsable de los datos:** La aplicación solo solicita los datos que sean estrictamente necesarios para que funcione correctamente y no se solicita información sensible (como datos bancarios) ni se retienen datos innecesarios (cuando se elimina algo, es permanente).
 
         - **No implementados, pero podrían implementarse en un futuro:**
-            - **Consentimiento del usuario:** Implementar una checkbox para que los usuarios acepten los términos antes de registrar una cuenta y aclarar que sus datos pueden ser recogidos.
-            - **Eliminación completa de una cuenta:** Extensión del derecho al olvido donde se podría implementar una forma de eliminar la cuenta de forma permanente sin dejar ningún tipo de rastro.
             - **Avisos de violaciones de seguridad:** Implementar un sistema que avise a todos los usuarios de la aplicación en caso de que se encuentre una brecha de seguridad y sus datos puedan estar en peligro.
             - **Protección de menores:** Limitar la recogida de datos de menores de edad sin la supervisión de un tutor.
 
