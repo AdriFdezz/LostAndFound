@@ -1,18 +1,25 @@
-name: Feature Request
-description: Provide details for suggesting a new feature or improvement.
-labels: enhancement
+name: "Feature Request"
+description: "Use this template to suggest a new feature or improvement."
+labels: ["enhancement"]
 body:
-  - type: markdown
+  - type: "input"
     attributes:
-      value: |
-        ## Feature Description
-        **Describe the feature or improvement you suggest**:
-
-        ## Benefits of the Feature
-        How would this feature improve the app?
-
-  - type: input
+      label: "Feature Title"
+      description: "Provide a title for the feature request."
+      placeholder: "e.g. Add dark mode to the app"
+      required: true
+  - type: "textarea"
     attributes:
-      label: Why is this feature important?
-      description: Explain why you think this feature should be added.
-      placeholder: Explain the importance of this feature here.
+      label: "Feature Description"
+      description: "Please describe the feature or improvement you suggest."
+      required: true
+  - type: "textarea"
+    attributes:
+      label: "Benefits of the Feature"
+      description: "How would this feature improve the app?"
+      required: true
+  - type: "textarea"
+    attributes:
+      label: "Why is this feature important?"
+      description: "Explain why you think this feature should be added."
+      required: true
