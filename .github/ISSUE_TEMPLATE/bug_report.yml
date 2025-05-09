@@ -1,26 +1,49 @@
-name: "Bug Report"
-description: "Use this template to report a bug."
-labels: ["bug"]
+name: Bug Report
+description: Report a bug to help us improve the app.
+labels: bug
 body:
-  - type: "input"
+  - type: markdown
     attributes:
-      label: "Title"
-      description: "Provide a short title for the bug."
-      placeholder: "e.g. App crashes when I click the button"
-      required: true
-  - type: "textarea"
+      value: |
+        ## Bug Description
+        **Describe the bug**:
+        - Please provide a detailed description of the bug.
+
+        ## Expected Behavior
+        **What did you expect to happen?**
+
+        ## Steps to Reproduce
+        1. Step 1
+        2. Step 2
+        3. Step 3
+
+        ## Screenshots
+        If possible, attach screenshots to help better understand the issue.
+
+  - type: input
     attributes:
-      label: "Bug Description"
-      description: "Please describe the bug in detail."
-      placeholder: "What steps did you take before encountering this bug?"
+      label: "What did you expect to happen?"
+      description: "Describe what you expected to happen instead of the bug."
+      placeholder: "Describe the expected behavior here."
       required: true
-  - type: "textarea"
+
+  - type: input
     attributes:
-      label: "Expected behavior"
-      description: "What did you expect to happen?"
+      label: "Steps to reproduce"
+      description: "Please provide the steps to reproduce the bug."
+      placeholder: "e.g. 1. Open the app, 2. Click on 'Login'"
       required: true
-  - type: "textarea"
+
+  - type: textarea
     attributes:
       label: "Additional Context"
-      description: "Add any other context about the problem here."
+      description: "Provide any additional information that might be useful."
+      placeholder: "Include any relevant context or configurations (optional)."
+      required: false
+
+  - type: input
+    attributes:
+      label: "Screenshots"
+      description: "If possible, upload any screenshots that could help us understand the issue."
+      placeholder: "Upload a screenshot (optional)"
       required: false
