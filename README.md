@@ -15,6 +15,14 @@
 
 >**Important Note:** 🐶🔎 LostAndFound is not intended to replace professional pet recovery services or animal shelters. Instead, it aims to empower local communities by providing a platform for reporting and finding lost pets. LostAndFound offers a practical solution for individuals looking to reunite with their pets, ensuring that those in need of assistance can easily reach out to their neighbors and local community members. While the app helps bridge the gap, professional services should still be contacted in cases requiring immediate or specialized intervention.
 
+<p align="center">
+    <a href="https://github.com/AdriFdezz/LostAndFound/issues/new?template=bug_report.yml">Report Bug</a>
+    ·
+    <a href="https://github.com/AdriFdezz/LostAndFound/issues/new?template=feature_request.yml">Request New Feature</a>
+    ·
+    <a href="">Wiki</a>
+  </p>
+
 ----
 
 ## Table of contents
@@ -95,4 +103,4 @@ This flow ensures that users can easily navigate through different features of t
 
 ## Demo
 
-For the demo, we have a YouTube video where we can see the functioning of the application and test some of its features. This is the [Demo](https://www.youtube.com/watch?v=Sna3rsezz7c).
+For the demo, we have a YouTube video where we can see the functioning of the application and test some of its features. You can check the demo here: [Demo Lost And Found](https://www.youtube.com/watch?v=Sna3rsezz7c).

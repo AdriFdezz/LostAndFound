@@ -1,0 +1,18 @@
+name: Feature Request
+description: Provide details for suggesting a new feature or improvement.
+labels: enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Feature Description
+        **Describe the feature or improvement you suggest**:
+
+        ## Benefits of the Feature
+        How would this feature improve the app?
+
+  - type: input
+    attributes:
+      label: Why is this feature important?
+      description: Explain why you think this feature should be added.
+      placeholder: Explain the importance of this feature here.
