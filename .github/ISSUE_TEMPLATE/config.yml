@@ -1,0 +1,7 @@
+issue_templates:
+  bug_report:
+    labels:
+      - bug
+  feature_request:
+    labels:
+      - enhancement
