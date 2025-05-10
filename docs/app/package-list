@@ -1,0 +1,91 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.adrifdezz.lostandfound.data////PointingToDeclaration/app/com.adrifdezz.lostandfound.data/index.html
+$dokka.location:com.adrifdezz.lostandfound.data/AuthRepository///PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-auth-repository/index.html
+$dokka.location:com.adrifdezz.lostandfound.data/AuthRepository/AuthRepository/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-auth-repository/-auth-repository.html
+$dokka.location:com.adrifdezz.lostandfound.data/AuthRepository/cerrarSesion/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-auth-repository/cerrar-sesion.html
+$dokka.location:com.adrifdezz.lostandfound.data/AuthRepository/iniciarSesion/#kotlin.String#kotlin.String#kotlin.Function2[com.google.firebase.auth.FirebaseUser?,kotlin.String?,kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-auth-repository/iniciar-sesion.html
+$dokka.location:com.adrifdezz.lostandfound.data/AuthRepository/recuperarContrasena/#kotlin.String#kotlin.Function2[kotlin.Boolean,kotlin.String?,kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-auth-repository/recuperar-contrasena.html
+$dokka.location:com.adrifdezz.lostandfound.data/AuthRepository/registrar/#kotlin.String#kotlin.String#kotlin.String#kotlin.Function2[com.google.firebase.auth.FirebaseUser?,kotlin.String?,kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-auth-repository/registrar.html
+$dokka.location:com.adrifdezz.lostandfound.data/NotificacionAvistamiento///PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-notificacion-avistamiento/index.html
+$dokka.location:com.adrifdezz.lostandfound.data/NotificacionAvistamiento/NotificacionAvistamiento/#kotlin.String#kotlin.String#kotlin.String#kotlin.String?#kotlin.Long/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-notificacion-avistamiento/-notificacion-avistamiento.html
+$dokka.location:com.adrifdezz.lostandfound.data/NotificacionAvistamiento/fotoUrl/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-notificacion-avistamiento/foto-url.html
+$dokka.location:com.adrifdezz.lostandfound.data/NotificacionAvistamiento/id/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-notificacion-avistamiento/id.html
+$dokka.location:com.adrifdezz.lostandfound.data/NotificacionAvistamiento/postId/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-notificacion-avistamiento/post-id.html
+$dokka.location:com.adrifdezz.lostandfound.data/NotificacionAvistamiento/timestamp/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-notificacion-avistamiento/timestamp.html
+$dokka.location:com.adrifdezz.lostandfound.data/NotificacionAvistamiento/ubicacion/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-notificacion-avistamiento/ubicacion.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData///PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/index.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/PostData/#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/-post-data.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/descripcion/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/descripcion.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/diaPerdido/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/dia-perdido.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/edad/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/edad.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/fotoUrl/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/foto-url.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/id/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/id.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/localidad/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/localidad.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/nombre/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/nombre.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/raza/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/raza.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/ultimaUbicacion/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/ultima-ubicacion.html
+$dokka.location:com.adrifdezz.lostandfound.data/PostData/usuarioId/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.data/-post-data/usuario-id.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components////PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/index.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//AddPostScreen/#com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-add-post-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//AuthScreen/#com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-auth-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//AuthTextField/#kotlin.String#kotlin.Function1[kotlin.String,kotlin.Unit]#kotlin.String#androidx.compose.ui.text.input.VisualTransformation#kotlin.Function0[kotlin.Unit]?/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-auth-text-field.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//CustomAlertDialogAuth/#kotlin.String#kotlin.String#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-custom-alert-dialog-auth.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//CustomAlertDialogCorreo/#kotlin.String#kotlin.String#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-custom-alert-dialog-correo.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//CustomAlertDialogCuentaEliminada/#kotlin.String#kotlin.String#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-custom-alert-dialog-cuenta-eliminada.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//CustomAlertDialogPost/#kotlin.String#kotlin.String#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-custom-alert-dialog-post.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//CustomAlertDialogRecovery/#kotlin.String#kotlin.String#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-custom-alert-dialog-recovery.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//EditPostScreen/#kotlin.String#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-edit-post-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//GestionPublicacionScreen/#kotlin.String#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-gestion-publicacion-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//HistorialNotificacionesScreen/#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-historial-notificaciones-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//PasswordRecoveryScreen/#com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-password-recovery-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//PerfilScreen/#com.adrifdezz.lostandfound.ui.viewmodel.AuthViewModel#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-perfil-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//PostCard/#com.adrifdezz.lostandfound.data.PostData#androidx.navigation.NavController#kotlin.Boolean/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-post-card.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//PostDetailsScreen/#kotlin.String#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-post-details-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//TusPublicacionesScreen/#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-tus-publicaciones-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.components//WelcomeScreen/#androidx.navigation.NavController/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.components/-welcome-screen.html
+$dokka.location:com.adrifdezz.lostandfound.ui.utils////PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.utils/index.html
+$dokka.location:com.adrifdezz.lostandfound.ui.utils//BotonMostrarOcultarContrasena/#kotlin.Boolean#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.utils/-boton-mostrar-ocultar-contrasena.html
+$dokka.location:com.adrifdezz.lostandfound.ui.utils//validarContrasena/#kotlin.String/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.utils/validar-contrasena.html
+$dokka.location:com.adrifdezz.lostandfound.ui.view////PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.view/index.html
+$dokka.location:com.adrifdezz.lostandfound.ui.view/AuthActivity///PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.view/-auth-activity/index.html
+$dokka.location:com.adrifdezz.lostandfound.ui.view/AuthActivity/AuthActivity/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.view/-auth-activity/-auth-activity.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel////PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/index.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel.Factory///PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/-factory/index.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel.Factory/Factory/#com.adrifdezz.lostandfound.data.AuthRepository/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/-factory/-factory.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel.Factory/create/#java.lang.Class[TypeParam(bounds=[androidx.lifecycle.ViewModel])]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/-factory/create.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel///PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/index.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/AuthViewModel/#com.adrifdezz.lostandfound.data.AuthRepository/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/-auth-view-model.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/activarAlertaCorreoVerificado/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/activar-alerta-correo-verificado.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/actualizarCorreo/#kotlin.String#kotlin.String#androidx.navigation.NavController#kotlin.Function2[kotlin.Boolean,kotlin.String,kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/actualizar-correo.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/actualizarNombre/#kotlin.String#kotlin.Function2[kotlin.Boolean,kotlin.String,kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/actualizar-nombre.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/actualizarTiempoRestante/#kotlin.Long/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/actualizar-tiempo-restante.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/calcularTiempoRestante/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/calcular-tiempo-restante.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/cerrarSesion/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/cerrar-sesion.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/cooldownTime/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/cooldown-time.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/desactivarAlertaCorreoVerificado/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/desactivar-alerta-correo-verificado.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/desactivarAlertaCuentaEliminada/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/desactivar-alerta-cuenta-eliminada.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/eliminarCuenta/#kotlin.String#androidx.navigation.NavController#kotlin.Function2[kotlin.Boolean,kotlin.String,kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/eliminar-cuenta.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/error/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/error.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/esInicioSesionExitoso/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/es-inicio-sesion-exitoso.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/iniciarSesion/#kotlin.String#kotlin.String/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/iniciar-sesion.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/iniciarTemporizadorSiEsNecesario/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/iniciar-temporizador-si-es-necesario.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/limpiarMensajeRecuperacion/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/limpiar-mensaje-recuperacion.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/mensajeRecuperacion/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/mensaje-recuperacion.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/mostrarAlertaCorreoVerificado/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/mostrar-alerta-correo-verificado.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/mostrarAlertaCuentaEliminada/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/mostrar-alerta-cuenta-eliminada.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/publicarMascotaPerdida/#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.String#android.net.Uri#kotlin.Function2[kotlin.Boolean,kotlin.String?,kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/publicar-mascota-perdida.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/recuperarContrasena/#kotlin.String/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/recuperar-contrasena.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/refrescarUsuarioYActualizarCorreo/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/refrescar-usuario-y-actualizar-correo.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/registrar/#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/registrar.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/remainingTime/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/remaining-time.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/sesionCerradaManualmente/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/sesion-cerrada-manualmente.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/usuario/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/usuario.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/verificarCorreoEnFirestore/#kotlin.String#kotlin.Function2[kotlin.Boolean,kotlin.String?,kotlin.Unit]/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/verificar-correo-en-firestore.html
+$dokka.location:com.adrifdezz.lostandfound.ui.viewmodel/AuthViewModel/verificarSesionActiva/#/PointingToDeclaration/app/com.adrifdezz.lostandfound.ui.viewmodel/-auth-view-model/verificar-sesion-activa.html
+com.adrifdezz.lostandfound.data
+com.adrifdezz.lostandfound.ui.components
+com.adrifdezz.lostandfound.ui.utils
+com.adrifdezz.lostandfound.ui.view
+com.adrifdezz.lostandfound.ui.viewmodel
+
