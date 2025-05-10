@@ -20,7 +20,7 @@
     ·
     <a href="https://github.com/AdriFdezz/LostAndFound/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BFEATURE%5D">Suggest New Feature</a>
     ·
-    <a href="">Wiki</a>
+    <a href="https://github.com/AdriFdezz/LostAndFound/wiki">Wiki</a>
   </p>
 
 ----
