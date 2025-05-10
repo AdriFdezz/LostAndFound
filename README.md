@@ -31,6 +31,11 @@
 - [Why Lost And Found](#why-lost-and-found)
 - [How Lost And Found works](#how-lost-and-found-works)
 - [Demo](#demo)
+- [Getting Started](#getting-started)
+- [Customizability and Ideas for Extensions](#customizability-and-ideas-for-extensions)
+- [License](#license)
+- [Contributing](#contributing)
+- [References](#references)
 
 ----
 
@@ -104,3 +109,121 @@ This flow ensures that users can easily navigate through different features of t
 ## Demo
 
 For the demo, we have a YouTube video where we can see the functioning of the application and test some of its features. You can check the demo here: [Demo Lost And Found](https://www.youtube.com/watch?v=Sna3rsezz7c).
+
+----
+
+## Getting Started
+
+To get started with **Lost And Found**, follow these steps:
+
+### Prerequisites
+
+Ensure you have the following installed on your system:
+- **Android Studio** (for building the APK if needed)
+- **Java Development Kit (JDK)** (required for Android Studio)
+- **Android SDK** (usually comes with Android Studio)
+- **Git** (for cloning the repository)
+- **A working Android device** or **emulator** (for testing the APK)
+
+> **Important Note:** The **Lost And Found** application requires at least **Android 5.0 (Lollipop)** for proper functionality.
+
+### Clone the Repository
+
+Before proceeding with the installation or APK creation, you need to clone the repository.
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/AdriFdezz/LostAndFound.git
+    ```
+
+2. Navigate into the project directory:
+    ```bash
+    cd LostAndFound
+    ```
+
+### Create the APK
+
+#### Option 1: Download the APK Directly
+
+You can download the latest APK from the **`apk`** directory in this repository.
+
+1. Go to the [APK directory](https://github.com/AdriFdezz/LostAndFound/tree/main/apk).
+2. Download the **APK** file directly from there.
+
+#### Option 2: Build the APK from Android Studio
+
+In case the APK download doesn't work, follow these steps to build it from Android Studio.
+
+1. **Open Android Studio**:
+    - Make sure you have Android Studio installed. You can download it [here](https://developer.android.com/studio).
+
+2. **Import the Project**:
+    - Open Android Studio.
+    - Click on **Open an existing Android Studio project**.
+    - Select the directory where you've cloned or downloaded the **LostAndFound** repository.
+
+3. **Build the APK**:
+    - Once the project is opened, click on the **Build** menu at the top.
+    - Select **Build APK(s)**.
+    - Android Studio will start building the APK. Once the process finishes, you will see a notification with the option to **locate the APK**.
+
+#### Option 3: Test the APK on a PC using an Emulator
+
+If you don't have an Android device, you can test the app on your PC using a free emulator like **BlueStacks**.
+
+1. **Download BlueStacks**:
+    - Go to [BlueStacks](https://www.bluestacks.com) and download the emulator.
+    - Install it and open BlueStacks.
+
+2. **Install the APK**:
+    - Once BlueStacks is running, drag and drop the **APK file** you downloaded or built into the BlueStacks window.
+    - The emulator will install and run the APK.
+
+### Future Availability on Google Play Store
+
+Currently, **Lost And Found** is not available on the Google Play Store. However, we do not rule out the possibility of making the application available on the Play Store in the future, once it is fully tested and ready for public use.
+
+### Testing the Application
+
+If you want to test the application on your PC, you can use the APK and an emulator like BlueStacks.
+
+1. Download and install **BlueStacks** or another Android emulator.
+2. Drag and drop the **APK** into the emulator to install and run it.
+
+This is a great way to try the app without needing an Android device.
+
+----
+
+## Customizability and Ideas for Extensions
+
+Lost And Found is designed to be flexible and adaptable to different needs, offering several ways to extend its functionality. Below are some ideas on how to customize or extend the app to suit your specific requirements:
+
+- **Improved Notification System:** Enhance the notification system to notify users about updates in real-time regarding their lost pets.
+- **Real-Time Notifications:** Implement a notification system to alert users when a pet they are looking for has been posted or found.
+- **User Profiles:** Consider adding more detailed user profiles, allowing users to update personal information or track their posts and interactions within the app.
+- **Integration with Social Media:** Add functionality to share lost pet posts directly on social media platforms to reach a wider audience and increase the chances of reuniting pets with their owners.
+- **Pet Tracking:** Develop a feature to track found pets using GPS and allow users to mark specific locations on a map for others to see.
+- **Modular Search Filters:** Create customizable search filters to allow users to quickly find posts that match their specific criteria, such as type of pet, location, or date lost.
+
+Feel free to explore and experiment with these ideas to enhance Lost And Found and adapt it to different use cases.
+
+----
+
+## License
+
+Lost And Found is released under the [MIT License](./LICENSE). You are free to use, modify, and distribute the code for both commercial and non-commercial purposes.
+
+----
+
+## Contributing
+
+Contributions to Lost And Found are welcome! Whether it's improving the code, enhancing the documentation, or suggesting new features, your input is valuable. Please check out the [CONTRIBUTING.md](./CONTRIBUTING.md) file for guidelines on how to get started and make your contributions count.
+
+----
+
+## References
+
+- Lost And Found: A platform for lost pets, by AdriFdezz (2025).
+- Firebase Documentation: [https://firebase.google.com/docs](https://firebase.google.com/docs)
+- Android Documentation: [https://developer.android.com/docs](https://developer.android.com/docs)
+- ChatGPT Code Assistance: [https://openai.com/chatgpt](https://openai.com/chatgpt)
