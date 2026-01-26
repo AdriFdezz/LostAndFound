@@ -1,13 +1,16 @@
 # Lost And Found
 
-<p align="center">
-  <a href="https://github.com/AdriFdezz/LostAndFound/pulls">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true" alt="Pull Requests">
-  </a>
-  <a href="LICENSE">
-      <img src="https://img.shields.io/badge/License-MIT-yellow.svg?longCache=true" alt="MIT License">
-    </a>
-</p>
+<div align="center">
+  <img src="assets/LostAndFoundLogo.png" alt="Lost And Found" width="128"/>
+  
+  **A mobile application to help reunite lost pets with their owners.**
+  
+  [![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-7F52FF.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+  [![Firebase](https://img.shields.io/badge/Firebase-Latest-FFCA28.svg?logo=firebase&logoColor=black)](https://firebase.google.com/)
+  [![Android](https://img.shields.io/badge/Android-5.0+-3DDC84.svg?logo=android&logoColor=white)](https://www.android.com/)
+  [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+  [![Platform](https://img.shields.io/badge/Platform-Android-lightgrey.svg)]()
+</div>
 
 ----
 
